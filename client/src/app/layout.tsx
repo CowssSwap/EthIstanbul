@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 import WagmiProvider from '@/context/WagmiProvider'
+import { UIProvider } from '@/context/UIProvider'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -18,7 +19,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <WagmiProvider>
+        <UIProvider>
       <body className={inter.className}>{children}</body>
+      </UIProvider>
       </WagmiProvider>
       
     </html>
