@@ -72,10 +72,17 @@ export default function Home() {
   }
 
   const Swap = async () => {
+
+    const currentTimestamp = Date.now(); // Current timestamp in milliseconds
+    const tenMinutes = 10 * 60 * 1000; // 10 minutes in milliseconds
+    const expirationTimestamp = currentTimestamp + tenMinutes;
+
+
+
     const domain = {
       name: 'CowssChain order',
       version: '1',
-      chainId: 5,
+      chainId: 80001,
       verifyingContract: '0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC',
     } as const
 
@@ -96,17 +103,17 @@ export default function Home() {
     } as const;
 
     const message = {
-      sourceChainId: 80001,
-      destinationChainId: 1,
+      sourceChainId: 80001,//TODO: update dynamically
+      destinationChainId: 1,//TODO: update dynamically
       nonce: 1,
-      amountSourceToken: 1,
-      minDestinationTokenAmount: 1,
-      expirationTimestamp: 1,
+      amountSourceToken: sendAmount,
+      minDestinationTokenAmount: receiveAmount,
+      expirationTimestamp: expirationTimestamp,
       stakeOrder: 1,
-      sourceAddress: "0x0000000000000000000000000000000000000000",
-      destinationAddress: "0x0000000000000000000000000000000000000000",
-      sourceTokenAddress: "0x0000000000000000000000000000000000000000",
-      destinationTokenAddress: "0x0000000000000000000000000000000000000000"
+      sourceAddress: address,
+      destinationAddress: address, //maybe let user input this for more modularity
+      sourceTokenAddress: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",//TODO: update dynamically
+      destinationTokenAddress: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",//TODO: update dynamically
     } as const;
     
     console.log("swap")
