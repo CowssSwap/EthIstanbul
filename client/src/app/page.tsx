@@ -1,8 +1,8 @@
 "use client"
-import { useEffect, useState } from 'react'
+import { useEffect, useState,useRef } from 'react'
 import { Center, HStack, VStack, Text, Button, Heading, Divider, Image } from '@chakra-ui/react'
 import { Card, CardHeader, CardBody, CardFooter } from '@chakra-ui/react'
-import { ChevronDownIcon } from '@chakra-ui/icons'
+import { ChevronDownIcon, AddIcon } from '@chakra-ui/icons'
 import { Order } from '@sharedtypes/myTypes'
 import {
   Menu,
@@ -25,6 +25,19 @@ import {
   Box,
   Spacer,
   useDisclosure,
+  Drawer,
+  DrawerBody,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerOverlay,
+  DrawerContent,
+  DrawerCloseButton,
+  Stack,
+  FormLabel,
+  Select,
+  InputRightAddon,
+  Textarea
+
 
 
 } from '@chakra-ui/react'
@@ -48,6 +61,12 @@ export default function Home() {
   const [sendAmount, setSendAmount] = useState(0.0)
   let JSONData: { sourceChainId: string; destinationChainId: string; amountSourceToken: number; minDestinationTokenAmount: number; expirationTimestamp: number; sourceAddress: `0x${string}` | undefined; destinationAddress: `0x${string}` | undefined; sourceTokenAddress: string; destinationTokenAddress: string }[] = [];
 
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const firstField = useRef()
+
+  const [swapsData, setSwapsData] = useState([])
+
+
   // updates send token name
   const updateSendToken = (val: string) => {
     setSendToken(val)
@@ -65,12 +84,19 @@ export default function Home() {
     setReceiveChain(val)
   }
 
+
+  const updateSwapData = (val: string) => {
+   
+  }
+
+  
+
   const updateSendAmount = (valueAsString: String, valueasNumber: GLfloat) => {
     if (valueAsString != "") {
       setSendAmount(valueasNumber)
       if (receiveToken != "Select Token") {
         // set the amount they will receive 
-        // TODO: get the translation from am API call???
+        // TODO: get the translation from an API call???
 
         setReceiveAmount(valueasNumber * 100)
       }
@@ -131,7 +157,21 @@ export default function Home() {
     } catch (err) {
       console.log(err)
     }
+
+
+    let tempSwapsData = swapsData
+    const toAdd = {
+      "swapAddress": domain.verifyingContract,
+      "sourceChainId" : message.sourceChainId,
+      "destinationChainId" : message.destinationChainId,
+      "sourceTokenAddress" : message.sourceTokenAddress,
+      "timeout" : message.expirationTimestamp
+    }
+    tempSwapsData.push(toAdd)
+    setSwapsData(tempSwapsData)
   }
+
+
 
 
   useEffect(() => {
@@ -157,11 +197,9 @@ export default function Home() {
         <Box p='4' >
           {isConnected ? (
             <>
-              <Text style={{ float: "right" }} align={'right'}>Connected to {address}
-
-              </Text>
-              <br></br>
-              <br></br>
+              {/* <Text style={{ float: "right" }} align={'right'}>Connected to {address}
+              </Text> */}
+             
               <Button style={{ float: "right" }} outlineColor={"black"} onClick={() => disconnect()}>Disconnect</Button>
 
             </>
@@ -169,6 +207,11 @@ export default function Home() {
             <Button style={{ float: "right" }} outlineColor={"lightblue"} onClick={() => connect()}>Connect Wallet</Button>
           )}
 
+        </Box>
+        <Box p='4'>
+          <Button outlineColor={"black"}  onClick={onOpen}>
+          Running Swaps
+        </Button>
         </Box>
       </Flex>
 
@@ -405,6 +448,32 @@ export default function Home() {
         </VStack>
 
       </Center>
+
+
+
+
+      <Drawer
+        isOpen={isOpen}
+        placement='right'
+        initialFocusRef={firstField}
+        onClose={onClose}
+      >
+        <DrawerOverlay />
+        <DrawerContent>
+          <DrawerCloseButton />
+          <DrawerHeader borderBottomWidth='1px'>
+            Create a new account
+          </DrawerHeader>
+
+          <DrawerBody>
+
+            {}
+          
+          </DrawerBody>
+        </DrawerContent>
+      </Drawer>
+
+
     </div>
   )
 }
