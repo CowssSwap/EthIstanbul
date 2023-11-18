@@ -260,6 +260,7 @@ export default function Home() {
                         <MenuList>
                           {
                             Object.keys(Chains).map((key, index) => (
+                              
                               <MenuItem minH='40px' onClick={() => updateSendChain(key)}>
 
                                 <span>{key}</span>
