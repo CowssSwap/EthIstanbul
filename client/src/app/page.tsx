@@ -89,8 +89,12 @@ export default function Home() {
 
   return (
     <div>
+      <div className="flex items-center p-5">
 
-      <Heading padding={5}>CowssChain</Heading>
+      <Image src='logo.png' alt='logo' width='100px' height='100px' />
+      <Heading>CowssChain</Heading>
+
+      </div>
       <Center mt={"5rem"}>
         <VStack>
 
