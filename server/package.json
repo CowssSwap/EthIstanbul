@@ -29,6 +29,8 @@
     "typescript": "^5.1.6"
   },
   "dependencies": {
+    "@1inch/fusion-sdk": "^0.1.11",
+    "@cowprotocol/cow-sdk": "^4.0.3",
     "@solana/web3.js": "^1.76.0",
     "@types/morgan": "^1.9.4",
     "alchemy-sdk": "^2.9.2",
@@ -36,7 +38,7 @@
     "bs58": "^5.0.0",
     "cookie-parser": "^1.4.6",
     "dotenv": "^16.0.3",
-    "ethers": "^6.6.4",
+    "ethers": "^5.7.2",
     "express-session": "^1.17.3",
     "helmet": "^7.0.0",
     "js-crypto-hkdf": "^1.0.7",

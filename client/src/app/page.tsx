@@ -9,7 +9,7 @@ export default function Home() {
     connector: new InjectedConnector(),
   })
   const { disconnect } = useDisconnect()
- 
+  
   return (
     <Center mt={"5rem"}>
       <VStack>

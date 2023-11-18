@@ -1,5 +1,6 @@
 import { getPublicDemo } from "./getPublicDemo"
-
+import { postStoreOrderInfo } from "./postStoreOrderInfo"
+import { getHistory } from "./getHistory"
 
 
 
@@ -8,4 +9,7 @@ import { getPublicDemo } from "./getPublicDemo"
 
 export default {
     getPublicDemo,
+    postStoreOrderInfo,
+    getHistory
+    
 }
