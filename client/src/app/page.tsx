@@ -115,7 +115,7 @@ export default function Home() {
                   </MenuButton>
                   <MenuList>
                     {tokenList.map((token) =>
-                      <MenuItem minH='40px' onClick={() => updateSendToken(token.name)}>
+                      <MenuItem minH='40px' onClick={() => updateSendToken(token.name)} key={token.name}>
                         <Image
                           boxSize='2rem'
                           borderRadius='full'
@@ -134,9 +134,11 @@ export default function Home() {
                 
                 
                 <InputGroup>
-                  <InputLeftAddon children={sendToken} />
+                <InputLeftAddon>
+                {sendToken}
+                </InputLeftAddon>
                  
-                 
+        
                   <NumberInput defaultValue={0} min={0} clampValueOnBlur={false} placeholder='enter token amount'
                     onChange={updateSendAmount} >
                   <NumberInputField />
@@ -164,7 +166,7 @@ export default function Home() {
                   </MenuButton>
                   <MenuList>
                     {tokenList.map((token) =>
-                      <MenuItem minH='40px' onClick={() => updateReceiveToken(token.name)}>
+                      <MenuItem minH='40px' onClick={() => updateReceiveToken(token.name)} key={token.name}>
                         <Image
                           boxSize='2rem'
                           borderRadius='full'
