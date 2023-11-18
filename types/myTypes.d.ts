@@ -32,8 +32,7 @@ export interface DbUser extends Document {
     
   sourceChainId: number;
   destinationChainId: number;
-  jsonHash: string; 
-  nonce: number;
+  nonce: number; //have to generate it frontend site
   amountSourceToken: number;
   minDestinationTokenAmount: number;
   expirationTimestamp: number;

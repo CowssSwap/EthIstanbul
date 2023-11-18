@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import { Center, HStack, VStack, Text, Button, Heading, Divider, Image } from '@chakra-ui/react'
 import { Card, CardHeader, CardBody, CardFooter } from '@chakra-ui/react'
 import { ChevronDownIcon } from '@chakra-ui/icons'
+import { Order } from '@sharedtypes/myTypes'
 import {
   Menu,
   MenuButton,
@@ -27,7 +28,8 @@ import {
 
 
 } from '@chakra-ui/react'
-import { useAccount, useConnect, useDisconnect } from 'wagmi'
+import { useAccount, useConnect, useDisconnect, useWalletClient } from 'wagmi'
+import { signTypedData } from "@wagmi/core"
 import { InjectedConnector } from 'wagmi/connectors/injected'
 
 export default function Home() {
@@ -69,36 +71,57 @@ export default function Home() {
 
   }
 
-  const Swap = () => {
-    // open up json modal, and send json data
+  const Swap = async () => {
+    const domain = {
+      name: 'CowssChain order',
+      version: '1',
+      chainId: 5,
+      verifyingContract: '0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC',
+    } as const
 
-    const placeHolder = "8483"
+    const types = {
+      Order: [
+        { name: "sourceChainId", type: "uint256" },
+        { name: "destinationChainId", type: "uint256" },
+        { name: "nonce", type: "uint256" },
+        { name: "amountSourceToken", type: "uint256" },
+        { name: "minDestinationTokenAmount", type: "uint256" },
+        { name: "expirationTimestamp", type: "uint256" },
+        { name: "stakeOrder", type: "uint256" },
+        { name: "sourceAddress", type: "address" },
+        { name: "destinationAddress", type: "address" },
+        { name: "sourceTokenAddress", type: "address" },
+        { name: "destinationTokenAddress", type: "address" }
+      ]
+    } as const;
 
-    let tempData = [{"sourceChainId": placeHolder,
-      "destinationChainId": placeHolder,
-      "amountSourceToken": sendAmount,
-      "minDestinationTokenAmount": receiveAmount,
-      "expirationTimestamp": Date.now(),
-      "sourceAddress": address,
-      "destinationAddress": address,
-      "sourceTokenAddress": placeHolder,
-      "destinationTokenAddress": placeHolder,
-      }]
+    const message = {
+      sourceChainId: 80001,
+      destinationChainId: 1,
+      nonce: 1,
+      amountSourceToken: 1,
+      minDestinationTokenAmount: 1,
+      expirationTimestamp: 1,
+      stakeOrder: 1,
+      sourceAddress: "0x0000000000000000000000000000000000000000",
+      destinationAddress: "0x0000000000000000000000000000000000000000",
+      sourceTokenAddress: "0x0000000000000000000000000000000000000000",
+      destinationTokenAddress: "0x0000000000000000000000000000000000000000"
+    } as const;
+    
+    console.log("swap")
 
-      tokenList.forEach((token) => {
-        if (sendToken == token.name && token.chainId!= undefined){
-          tempData[0].sourceChainId = token.chainId
-          tempData[0].sourceTokenAddress = token.address
-        }
-  
-        if (receiveToken == token.name && token.chainId!= undefined){
-          tempData[0].destinationChainId = token.chainId
-          tempData[0].destinationTokenAddress = token.address
-        }
-      }) 
-    // make JSON data HERE!!
-    JSONData = tempData;
-
+    try {
+      const signature = await signTypedData({
+        domain,
+        message,
+        primaryType: 'Order',
+        types,
+      })
+      console.log(signature)
+    } catch (err) {
+      console.log(err)
+    }
   }
 
 
