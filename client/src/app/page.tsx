@@ -59,6 +59,9 @@ export default function Home() {
   const [receiveChain, setReceiveChain] = useState("Select Chain")
   const [receiveAmount, setReceiveAmount] = useState(0.0)
   const [sendAmount, setSendAmount] = useState(0.0)
+
+  const [loadingState, setLoadingState] = useState(0) //0 = not loading, 1 = awaiting signature, 2 = awaiting response
+
   let JSONData: { sourceChainId: string; destinationChainId: string; amountSourceToken: number; minDestinationTokenAmount: number; expirationTimestamp: number; sourceAddress: `0x${string}` | undefined; destinationAddress: `0x${string}` | undefined; sourceTokenAddress: string; destinationTokenAddress: string }[] = [];
 
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -107,10 +110,17 @@ export default function Home() {
   }
 
   const Swap = async () => {
+
+    const currentTimestamp = Date.now(); // Current timestamp in milliseconds
+    const tenMinutes = 10 * 60 * 1000; // 10 minutes in milliseconds
+    const expirationTimestamp = currentTimestamp + tenMinutes;
+
+
+
     const domain = {
       name: 'CowssChain order',
       version: '1',
-      chainId: 5,
+      chainId: 80001,
       verifyingContract: '0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC',
     } as const
 
@@ -131,21 +141,22 @@ export default function Home() {
     } as const;
 
     const message = {
-      sourceChainId: 80001,
-      destinationChainId: 1,
+      sourceChainId: 80001,//TODO: update dynamically
+      destinationChainId: 1,//TODO: update dynamically
       nonce: 1,
-      amountSourceToken: 1,
-      minDestinationTokenAmount: 1,
-      expirationTimestamp: 1,
+      amountSourceToken: sendAmount,
+      minDestinationTokenAmount: receiveAmount,
+      expirationTimestamp: expirationTimestamp,
       stakeOrder: 1,
-      sourceAddress: "0x0000000000000000000000000000000000000000",
-      destinationAddress: "0x0000000000000000000000000000000000000000",
-      sourceTokenAddress: "0x0000000000000000000000000000000000000000",
-      destinationTokenAddress: "0x0000000000000000000000000000000000000000"
+      sourceAddress: address,
+      destinationAddress: address, //maybe let user input this for more modularity
+      sourceTokenAddress: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",//TODO: update dynamically
+      destinationTokenAddress: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",//TODO: update dynamically
     } as const;
 
     console.log("swap")
 
+    setLoadingState(1);
     try {
       const signature = await signTypedData({
         domain,
@@ -154,8 +165,10 @@ export default function Home() {
         types,
       })
       console.log(signature)
+      setLoadingState(2);
     } catch (err) {
       console.log(err)
+      setLoadingState(0);
     }
 
 
@@ -444,6 +457,13 @@ export default function Home() {
               <Button outlineColor={"lightblue"} onClick={() => connect()}>Connect Wallet</Button>
             )}
           </Card>
+          <div className="flex justify-center items-center p-5">
+            {loadingState === 2 ? (
+              <Image src='nouns_anim.gif' alt='Nouns Animation' width="160px" height="60px"/>
+            ) : loadingState === 1 ? (
+              <Image src='signing_awaiting.gif' alt='Signing Awaiting' width="160px" height="60px" />
+            ) : null}
+          </div>
 
         </VStack>
 
