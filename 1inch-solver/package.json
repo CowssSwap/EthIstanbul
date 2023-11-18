@@ -7,5 +7,13 @@
     "dev": " NODE_ENV=development npx ts-node  app.ts"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "_moduleAliases": {
+    "@sharedtypes": "../types"
+  },
+  "dependencies": {
+    "@1inch/fusion-sdk": "^0.1.11",
+    "dotenv": "^16.3.1",
+    "ethers": "^6.8.1"
+  }
 }
