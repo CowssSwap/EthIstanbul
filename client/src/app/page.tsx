@@ -31,6 +31,7 @@ import {
 import { useAccount, useConnect, useDisconnect, useWalletClient } from 'wagmi'
 import { signTypedData } from "@wagmi/core"
 import { InjectedConnector } from 'wagmi/connectors/injected'
+import { Chains } from './tokens'
 
 export default function Home() {
   const { address, isConnected } = useAccount()
@@ -39,9 +40,10 @@ export default function Home() {
   })
   const { disconnect } = useDisconnect()
 
-  const [tokenList, setTokenList] = useState([{address:"0xaddy", chainId: "420", name: "Dai", img: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png" }, {address:"0xaddy", chain: "8453", name: " USDbC", img: "https://ethereum-optimism.github.io/data/USDC/logo.png" }])
   const [sendToken, setSendToken] = useState("Select Token")
   const [receiveToken, setReceiveToken] = useState("Select Token")
+  const [sendChain, setSendChain] = useState("Select Chain")
+  const [receiveChain, setReceiveChain] = useState("Select Chain")
   const [receiveAmount, setReceiveAmount] = useState(0.0)
   const [sendAmount, setSendAmount] = useState(0.0)
   let JSONData: { sourceChainId: string; destinationChainId: string; amountSourceToken: number; minDestinationTokenAmount: number; expirationTimestamp: number; sourceAddress: `0x${string}` | undefined; destinationAddress: `0x${string}` | undefined; sourceTokenAddress: string; destinationTokenAddress: string }[] = [];
@@ -55,8 +57,15 @@ export default function Home() {
     setReceiveToken(val)
   }
 
-  const updateSendAmount = (valueAsString: String, valueasNumber: GLfloat) => {
+  const updateSendChain = (val: string) => {
+    setSendChain(val)
+  }
 
+  const updateReceiveChain = (val: string) => {
+    setReceiveChain(val)
+  }
+
+  const updateSendAmount = (valueAsString: String, valueasNumber: GLfloat) => {
     if (valueAsString != "") {
       setSendAmount(valueasNumber)
       if (receiveToken != "Select Token") {
@@ -108,7 +117,7 @@ export default function Home() {
       sourceTokenAddress: "0x0000000000000000000000000000000000000000",
       destinationTokenAddress: "0x0000000000000000000000000000000000000000"
     } as const;
-    
+
     console.log("swap")
 
     try {
@@ -170,32 +179,93 @@ export default function Home() {
             <CardBody >
               <Card minW="md" >
                 <CardBody >
-                  <Menu>
-                    <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
-                      {/* <Image
-                          boxSize='2rem'
-                          borderRadius='full'
-                          src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
-                          alt='Simon the pensive'
-                          mr='12px'
-                        /> */}
-                      {sendToken}
-                    </MenuButton>
-                    <MenuList>
-                      {tokenList.map((token) =>
-                        <MenuItem minH='40px' onClick={() => updateSendToken(token.name)}>
-                          <Image
-                            boxSize='2rem'
-                            borderRadius='full'
-                            src={token.img}
-                            alt='Simon the pensive'
-                            mr='12px'
-                          />
-                          <span>{token.name}</span>
-                        </MenuItem>
-                      )}
-                    </MenuList>
-                  </Menu>
+
+
+                  <Flex>
+                    <Box p='4' >
+                      {sendChain != "Select Chain" ?
+                        <Menu>
+
+                          <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+                            <Flex>
+                              <Box p='2' >
+                                {sendToken != "Select Token" ?
+                                  <Image
+                                    boxSize='1.5rem'
+                                    borderRadius='full'
+                                    src={Chains[sendChain]["tokens"][sendToken].img}
+
+                                  /> : <></>
+                                }
+
+                              </Box>
+                              <Spacer />
+                              <Box p='2' >
+                                <Text>
+                                  {sendToken}
+                                </Text>
+                              </Box>
+                            </Flex>
+                          </MenuButton>
+                          <MenuList>
+                            {
+                              Object.keys(Chains[sendChain]["tokens"]).map((key, index) => (
+                                <MenuItem minH='40px' onClick={() => updateSendToken(key)}>
+                                  <Image
+                                    boxSize='2rem'
+                                    borderRadius='full'
+                                    src={Chains[sendChain]["tokens"][key].img}
+                                    alt='Simon the pensive'
+                                    mr='12px'
+                                  />
+                                  <span>{Chains[sendChain]["tokens"][key].name}</span>
+                                </MenuItem>
+                              ))
+                            }
+                          </MenuList>
+                        </Menu> : <></>
+                      }
+
+
+                    </Box>
+
+                    <Spacer />
+                    <Box p='4' >
+
+                      <Menu>
+
+                        <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+
+
+                          <Text>
+                            {sendChain}
+
+                          </Text>
+
+
+                        </MenuButton>
+
+                        <MenuList>
+                          {
+                            Object.keys(Chains).map((key, index) => (
+                              <MenuItem minH='40px' onClick={() => updateSendChain(key)}>
+
+                                <span>{key}</span>
+                              </MenuItem>
+                            ))
+                          }
+                        </MenuList>
+                      </Menu>
+
+
+
+
+                    </Box>
+                  </Flex>
+
+
+
+
 
                   <br></br> <br></br> <br></br>
 
@@ -226,25 +296,71 @@ export default function Home() {
               <Card minW="md" >
                 <CardBody>
 
-                  <Menu>
-                    <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
-                      {receiveToken}
-                    </MenuButton>
-                    <MenuList>
-                      {tokenList.map((token) =>
-                        <MenuItem minH='40px' onClick={() => updateReceiveToken(token.name)}>
-                          <Image
-                            boxSize='2rem'
-                            borderRadius='full'
-                            src={token.img}
-                            alt='Simon the pensive'
-                            mr='12px'
-                          />
-                          <span>{token.name}</span>
-                        </MenuItem>
-                      )}
-                    </MenuList>
-                  </Menu>
+                <Flex>
+                    <Box p='4' >
+
+                  {receiveChain != "Select Chain" ?
+                    <Menu>
+                      <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+                        {receiveToken}
+                      </MenuButton>
+                      <MenuList>
+                        {
+                          Object.keys(Chains[receiveChain]["tokens"]).map((key, index) => (
+                            <MenuItem minH='40px' onClick={() => updateReceiveToken(key)}>
+                              <Image
+                                boxSize='2rem'
+                                borderRadius='full'
+                                src={Chains[receiveChain]["tokens"][key].img}
+                                alt='Simon the pensive'
+                                mr='12px'
+                              />
+                              <span>{Chains[receiveChain]["tokens"][key].name}</span>
+                            </MenuItem>
+                          ))
+                        }
+                      </MenuList>
+                    </Menu>
+                    : <></>
+                  }
+
+</Box>
+
+<Spacer />
+<Box p='4' >
+<Menu>
+
+<MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+
+
+  <Text>
+    {receiveChain}
+
+  </Text>
+
+
+</MenuButton>
+
+<MenuList>
+  {
+    Object.keys(Chains).map((key, index) => (
+      <MenuItem minH='40px' onClick={() => updateReceiveChain(key)}>
+
+        <span>{key}</span>
+      </MenuItem>
+    ))
+  }
+</MenuList>
+</Menu>
+
+
+
+
+</Box>
+</Flex>
+
+
+
 
                   <br></br> <br></br> <br></br>
 
