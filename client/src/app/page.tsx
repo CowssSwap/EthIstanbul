@@ -39,11 +39,14 @@ export default function Home() {
   })
   const { disconnect } = useDisconnect()
 
-  const [tokenList, setTokenList] = useState([{address:"0xaddy", chainId: "420", name: "Dai", img: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png" }, {address:"0xaddy", chain: "8453", name: " USDbC", img: "https://ethereum-optimism.github.io/data/USDC/logo.png" }])
+  const [tokenList, setTokenList] = useState([{ address: "0xaddy", chainId: "420", name: "Dai", img: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png" }, { address: "0xaddy", chain: "8453", name: " USDbC", img: "https://ethereum-optimism.github.io/data/USDC/logo.png" }])
   const [sendToken, setSendToken] = useState("Select Token")
   const [receiveToken, setReceiveToken] = useState("Select Token")
   const [receiveAmount, setReceiveAmount] = useState(0.0)
   const [sendAmount, setSendAmount] = useState(0.0)
+
+  const [loadingState, setLoadingState] = useState(0) //0 = not loading, 1 = awaiting signature, 2 = awaiting response
+
   let JSONData: { sourceChainId: string; destinationChainId: string; amountSourceToken: number; minDestinationTokenAmount: number; expirationTimestamp: number; sourceAddress: `0x${string}` | undefined; destinationAddress: `0x${string}` | undefined; sourceTokenAddress: string; destinationTokenAddress: string }[] = [];
 
   // updates send token name
@@ -115,9 +118,10 @@ export default function Home() {
       sourceTokenAddress: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",//TODO: update dynamically
       destinationTokenAddress: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",//TODO: update dynamically
     } as const;
-    
+
     console.log("swap")
 
+    setLoadingState(1);
     try {
       const signature = await signTypedData({
         domain,
@@ -126,8 +130,10 @@ export default function Home() {
         types,
       })
       console.log(signature)
+      setLoadingState(2);
     } catch (err) {
       console.log(err)
+      setLoadingState(0);
     }
   }
 
@@ -273,6 +279,13 @@ export default function Home() {
               <Button outlineColor={"lightblue"} onClick={() => connect()}>Connect Wallet</Button>
             )}
           </Card>
+          <div className="flex justify-center items-center p-5">
+            {loadingState === 2 ? (
+              <Image src='nouns_anim.gif' alt='Nouns Animation' width="160px" height="60px"/>
+            ) : loadingState === 1 ? (
+              <Image src='signing_awaiting.gif' alt='Signing Awaiting' width="160px" height="60px" />
+            ) : null}
+          </div>
 
         </VStack>
 
