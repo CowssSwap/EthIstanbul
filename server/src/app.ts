@@ -17,6 +17,7 @@ dotenv.config({ path: `.env.${process.env.NODE_ENV}` });
 import authRoute from "./routes/auth.route";
 import adminRoute from "./routes/admin.route";
 import publicRoute from "./routes/public.route";
+import solverRoute from "./routes/solver.route";
 //middleware import
 import isAuthorized from './middleware/isAuthorized.middleware';
 import isAdmin from './middleware/isAdmin.middleware';
@@ -25,7 +26,6 @@ import isValid from '@middleware/isValid.middleware';
 import http from "http"
 import helmet from 'helmet';
 import eventEmitter from './eventEmitter';
-import sendSol from './utils/sendSol';
 
 
 
@@ -54,25 +54,12 @@ const main = () => {
   }));
   app.use(bodyParser.json());
 
-
-
-  app.use(session({
-
-    secret: process.env.SEED,
-    cookie: {
-      maxAge: 60000 * 60 ,
-      domain: "localhost",
-      httpOnly: true
-    },
-    saveUninitialized: true,
-    resave: false,
-    name: "discord.oauth2",
-  }));
-
-
-  // Passport
-  app.use(passport.initialize());
-  app.use(passport.session());
+  const connect = async () => {
+    const mongoose = require("mongoose");
+    await mongoose.connect(process.env.MONGODB);
+    console.log("online");
+  };
+  connect();
 
 
 
@@ -80,6 +67,7 @@ const main = () => {
   // Middleware Routes
   app.use('/auth', authRoute);
   app.use('/public',publicRoute);
+  app.use('/solver',solverRoute);
   app.use('/admin', isAuthorized, isValid, isActive, isAdmin, adminRoute);
   
   server.listen(PORT, () => {

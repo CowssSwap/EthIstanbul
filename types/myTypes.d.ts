@@ -1,5 +1,5 @@
 import { type } from "os";
-import {  AccountType, AllowedChains,ResponseMessage, Socials } from "./enums";
+import {  AccountType, AllowedChains,OrderState,ResponseMessage, Socials } from "./enums";
 import { Document, Types } from 'mongoose';
 
 // DB MODELS
@@ -28,4 +28,35 @@ export interface DbUser extends Document {
     access_token:string
   } 
 
+  export interface Order {
+    
+  sourceChainId: number;
+  destinationChainId: number;
+  jsonHash: string; 
+  nonce: number;
+  amountSourceToken: number;
+  minDestinationTokenAmount: number;
+  expirationTimestamp: number;
+  stakeOrder:number;
+  sourceAddress: string;
+  destinationAddress: string;
+  sourceTokenAddress: string;
+  destinationTokenAddress: string;
+
+
+  }
+
+
+  export interface DbOrder{
+    filecoin_hash:string;
+    source_adress:string;
+    chain_id:number;
+    order:Order;
+    order_state:OrderState;
+  }
  
+  export interface StoreOrderReqBody{
+    order:Order;
+    source_adress:string;
+    chain_id:number;
+  }

@@ -5,5 +5,8 @@ const router = Router();
 
 
 router.get("/",publicController.getPublicDemo)
+router.post("/store",publicController.getPublicDemo)
+router.get("/history/:sourceAdress",publicController.getHistory)
+
 
 export default router

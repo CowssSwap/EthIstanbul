@@ -100,3 +100,9 @@ export enum Socials {
   website = "website",
   discord = "discord",
 }
+
+export enum OrderState {
+  waiting = "Waiting",
+  expired = "Expired",
+  prcoessed = "Processed"
+}
