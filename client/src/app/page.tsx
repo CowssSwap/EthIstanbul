@@ -179,7 +179,7 @@ export default function Home() {
 
 
                   <InputGroup>
-                    <InputLeftAddon children={sendToken} />
+                    <InputLeftAddon>{sendToken}</InputLeftAddon>
 
 
                     <NumberInput defaultValue={0} min={0} clampValueOnBlur={false} placeholder='enter token amount'
