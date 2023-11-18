@@ -64,7 +64,7 @@ export default function Home() {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const firstField = useRef()
 
-  const [swapsData, setSwapsData] = useState([])
+  const [swapsData, setSwapsData] = useState<Swap>([])
 
 
   // updates send token name
@@ -159,6 +159,8 @@ export default function Home() {
     }
 
 
+
+
     let tempSwapsData = swapsData
     const toAdd = {
       "swapAddress": domain.verifyingContract,
@@ -208,11 +210,13 @@ export default function Home() {
           )}
 
         </Box>
+        {isConnected ? (
         <Box p='4'>
           <Button outlineColor={"black"}  onClick={onOpen}>
           Running Swaps
         </Button>
         </Box>
+        ):<></>}
       </Flex>
 
       <Center mt={"5rem"}>
@@ -409,6 +413,7 @@ export default function Home() {
                               <MenuItem minH='40px' onClick={() => updateReceiveChain(key)}>
 
                                 <span>{key}</span>
+
                               </MenuItem>
                             ))
                           }
@@ -451,8 +456,9 @@ export default function Home() {
 
 
 
-
+      
       <Drawer
+      size="lg"
         isOpen={isOpen}
         placement='right'
         initialFocusRef={firstField}
@@ -462,18 +468,50 @@ export default function Home() {
         <DrawerContent>
           <DrawerCloseButton />
           <DrawerHeader borderBottomWidth='1px'>
-            Create a new account
+            Your Swaps
           </DrawerHeader>
 
           <DrawerBody>
+          
 
-            {}
+            {swapsData.map(singleSwap => (
+              <>
+                <Card>
+                  <CardBody>
+                  <Heading>{singleSwap.swapAddress}</Heading>
+                <Divider></Divider>
+                 <Text fontWeight="light">Source:</Text> 
+                  <Flex>
+                    <Box p='4'>
+                      ChainID: {singleSwap.sourceChainId}
+                    </Box>
+                    <Box  p='4'>
+                      TokenAddress: {singleSwap.sourceTokenAddress}
+                    </Box>
+                  </Flex>
+
+                  <Text>Destination:</Text> 
+                  <Flex>
+                    <Box p='4'>
+                      ChainID: {singleSwap.destinationChainId}
+                    </Box>
+                    <Box  p='4'>
+                      TokenAddress: {singleSwap.destinationTokenAddress}
+                    </Box>
+                  </Flex>
+
+
+                  </CardBody>
+               
+              </Card>
+               
+              </>
+
+            ))}
           
           </DrawerBody>
         </DrawerContent>
       </Drawer>
-
-
     </div>
   )
 }
