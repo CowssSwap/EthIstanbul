@@ -296,68 +296,87 @@ export default function Home() {
               <Card minW="md" >
                 <CardBody>
 
-                <Flex>
+                  <Flex>
                     <Box p='4' >
 
-                  {receiveChain != "Select Chain" ?
-                    <Menu>
-                      <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
-                        {receiveToken}
-                      </MenuButton>
-                      <MenuList>
-                        {
-                          Object.keys(Chains[receiveChain]["tokens"]).map((key, index) => (
-                            <MenuItem minH='40px' onClick={() => updateReceiveToken(key)}>
-                              <Image
-                                boxSize='2rem'
-                                borderRadius='full'
-                                src={Chains[receiveChain]["tokens"][key].img}
-                                alt='Simon the pensive'
-                                mr='12px'
-                              />
-                              <span>{Chains[receiveChain]["tokens"][key].name}</span>
-                            </MenuItem>
-                          ))
-                        }
-                      </MenuList>
-                    </Menu>
-                    : <></>
-                  }
+                      {receiveChain != "Select Chain" ?
+                        <Menu>
+                          <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+                          <Flex>
+                              <Box p='2' >
+                                {receiveToken != "Select Token" ?
+                                  <Image
+                                    boxSize='1.5rem'
+                                    borderRadius='full'
+                                    src={Chains[receiveChain]["tokens"][receiveToken].img}
 
-</Box>
+                                  /> : <></>
+                                }
 
-<Spacer />
-<Box p='4' >
-<Menu>
+                              </Box>
+                              <Spacer />
+                              <Box p='2' >
+                                <Text>
+                                {receiveToken}
+                                </Text>
+                              </Box>
+                            </Flex>
+                           
+                          </MenuButton>
+                          <MenuList>
+                            {
+                              Object.keys(Chains[receiveChain]["tokens"]).map((key, index) => (
+                                <MenuItem minH='40px' onClick={() => updateReceiveToken(key)}>
+                                  <Image
+                                    boxSize='2rem'
+                                    borderRadius='full'
+                                    src={Chains[receiveChain]["tokens"][key].img}
+                                    alt='Simon the pensive'
+                                    mr='12px'
+                                  />
+                                  <span>{Chains[receiveChain]["tokens"][key].name}</span>
+                                </MenuItem>
+                              ))
+                            }
+                          </MenuList>
+                        </Menu>
+                        : <></>
+                      }
 
-<MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+                    </Box>
 
+                    <Spacer />
+                    <Box p='4' >
+                      <Menu>
 
-  <Text>
-    {receiveChain}
-
-  </Text>
-
-
-</MenuButton>
-
-<MenuList>
-  {
-    Object.keys(Chains).map((key, index) => (
-      <MenuItem minH='40px' onClick={() => updateReceiveChain(key)}>
-
-        <span>{key}</span>
-      </MenuItem>
-    ))
-  }
-</MenuList>
-</Menu>
+                        <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
 
 
+                          <Text>
+                            {receiveChain}
+
+                          </Text>
 
 
-</Box>
-</Flex>
+                        </MenuButton>
+
+                        <MenuList>
+                          {
+                            Object.keys(Chains).map((key, index) => (
+                              <MenuItem minH='40px' onClick={() => updateReceiveChain(key)}>
+
+                                <span>{key}</span>
+                              </MenuItem>
+                            ))
+                          }
+                        </MenuList>
+                      </Menu>
+
+
+
+
+                    </Box>
+                  </Flex>
 
 
 
