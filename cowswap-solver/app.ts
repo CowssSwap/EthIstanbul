@@ -5,18 +5,16 @@ import getCurrentOrders from "./getCurrentOrders";
 import { DbOrder, Order } from "@sharedtypes/myTypes";
 import { ethers } from "ethers";
 dotenv.config();
-const rpc={5:"https://ethereum-goerli.publicnode.com",10200:"https://1rpc.io/gnosis	",421613:"https://endpoints.omniatech.io/v1/arbitrum/goerli/public",420:"https://endpoints.omniatech.io/v1/op/goerli/public",280:"https://testnet.era.zksync.dev",84531:"https://endpoints.omniatech.io/v1/base/goerli/public	",80001:"https://endpoints.omniatech.io/v1/matic/mumbai/public",43113:"https://endpoints.omniatech.io/v1/avax/fuji/public",4002:"https://fantom.api.onfinality.io/public"}
+const rpc = {5:"https://ethereum-goerli.publicnode.com",10200:"https://1rpc.io/gnosis	",421613:"https://endpoints.omniatech.io/v1/arbitrum/goerli/public",420:"https://endpoints.omniatech.io/v1/op/goerli/public",280:"https://testnet.era.zksync.dev",84531:"https://endpoints.omniatech.io/v1/base/goerli/public	",80001:"https://endpoints.omniatech.io/v1/matic/mumbai/public",4002:"https://fantom.api.onfinality.io/public",1442:"https://rpc.public.zkevm-test.net",59140:"https://rpc.goerli.linea.build",44787:"https://alfajores-forno.celo-testnet.org"}
 const tokens = {5:"0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6",10200:"0x02abbdbaaa7b1bb64b5c878f7ac17f8dda169532"}
 const decimals = {"0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6":18,"0x02abbdbaaa7b1bb64b5c878f7ac17f8dda169532":18}
 async function putOrder(dborder:DbOrder) {
 
-
-    const wallet = new ethers.Wallet (process.env.PRIV_KEY!);
-
+const wallet = new ethers.Wallet (process.env.PRIV_KEY!);
 const account = wallet.address
 const targetChainId = dborder.chain_id // Goerli
 //@ts-ignore just field bypass for dict object keys
-const provider =  new ethers.providers.JsonRpcProvider(rpc[chainId]);
+const provider =  new ethers.providers.JsonRpcProvider(rpc[dborder.order.sourceChainId]);
 const signer = provider.getSigner()
 //@ts-ignore just field bypass for dict object keys
 const buyToken = tokens[targetChainId]
@@ -30,7 +28,7 @@ const quoteRequest = {
   buyToken: buyToken, // GNO goerli
   from: account,
   receiver: account,
-  buyAmountAfterFee: (dborder.order.minDestinationTokenAmount * 10 ** selectedDecimal).toString(),
+  buyAmountAfterFee: (dborder.order.minDestinationTokenAmount).toString(),
   kind: OrderQuoteSideKindBuy.BUY,
 }
 
