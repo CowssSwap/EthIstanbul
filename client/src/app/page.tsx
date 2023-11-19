@@ -1,6 +1,6 @@
 "use client"
 import { useEffect, useState, useRef } from 'react'
-import { Center, HStack, VStack, Text, Button, Heading, Divider, Image } from '@chakra-ui/react'
+import { Center, HStack, VStack, Text, Button, Heading, Divider, Image, Tabs, Tab, TabList, TabPanel, TabPanels } from '@chakra-ui/react'
 import { Card, CardHeader, CardBody, CardFooter } from '@chakra-ui/react'
 import { ChevronDownIcon, AddIcon } from '@chakra-ui/icons'
 import { Order } from '@sharedtypes/myTypes'
@@ -219,10 +219,10 @@ setProgressIndex(4);
 
 await delay(5000);
 setProgressIndex(5);
+setLoadingState(0);
 
 await delay(5000);
 setProgressIndex(0);
-setLoadingState(0);
 
   
 
@@ -321,278 +321,871 @@ setLoadingState(0);
         ):<></>}
       </Flex>
 
-      <Center mt={"5rem"}>
-        <VStack>
+      <Center mt={"0rem"}>
+      <Tabs w={"50vw"} isFitted variant='enclosed'>
+  <TabList mb='1em'>
+    <Tab>
+      <HStack>
+      <Text fontWeight={"bold"}>Market Order</Text>
+        <Image
+      src="cow.svg"
+      width={10}
+      height={100}
+      alt="Picture of the author"
+    />
+        <Image
+      src="inch.svg"
+      width={10}
+      height={10}
+      alt="Picture of the author"
+    />
+    </HStack>
+    </Tab>
+    
+    <Tab><Text fontWeight={"bold"}>Deposit on</Text> <Image ml={"10px"}
+      src="spark-logo.svg"
+      width={100}
+      height={100}
+      alt="Picture of the author"
+    /></Tab>
+    <Tab><Text fontWeight={"bold"}>Stop Loss Order</Text> <Image ml={"10px"}
+      src="chor.svg"
+      width={10}
+      height={100}
+      alt="Picture of the author"
+    /></Tab>
+  </TabList>
+  <TabPanels>
+    <TabPanel>
+    <VStack>
 
-          <Card borderWidth={"0.3rem"} className='outer-panel'>
-            <CardBody >
-              <Card  minW="md" >
-                <CardBody borderWidth={"0.1rem"} borderRadius={"5px"} borderColor={"black"} >
-
-
-                  <Flex>
-
-                    <Box p='4' >
-
-                      <Menu>
-
-                        <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
-
-
-                        <Flex>
-                              <Box p='2' >
-                                {sendChain != "Select Chain" ?
-                                  <Image
-                                    boxSize='1.5rem'
-                                    borderRadius='full'
-                                    src={Chains[sendChain].img}
-
-                                  /> : <></>
-                                }
-
-                              </Box>
-                              <Spacer />
-                              <Box p='2' >
-                                <Text>
-                                  {sendChain}
-                                </Text>
-                              </Box>
-                            </Flex>
-
-                        </MenuButton>
-
-                        <MenuList>
-                          {
-                            Object.keys(Chains).map((key, index) => (
-
-                              <MenuItem minH='40px' onClick={() => updateSendChain(key)}>
-                                <Image
-                                    boxSize='2rem'
-                                    borderRadius='full'
-                                    src={Chains[key].img}
-                                    alt='Simon the pensive'
-                                    mr='12px'
-                                  />
-                                <span>{key}</span>
-                              </MenuItem>
-                            ))
-                          }
-                        </MenuList>
-                      </Menu>
+<Card borderWidth={"0.3rem"} className='outer-panel'>
+  <CardBody >
+    <Card  minW="md" >
+      <CardBody borderWidth={"0.1rem"} borderRadius={"5px"} borderColor={"black"} >
 
 
+        <Flex>
+
+          <Box p='4' >
+
+            <Menu>
+
+              <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
 
 
-                    </Box>
-
-                    <Spacer />
-
-                    <Box  p='4' >
+              <Flex>
+                    <Box p='2' >
                       {sendChain != "Select Chain" ?
-                        <Menu>
+                        <Image
+                          boxSize='1.5rem'
+                          borderRadius='full'
+                          src={Chains[sendChain].img}
 
-                          <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
-                            <Flex>
-                              <Box p='2' >
-                                {sendToken != "Select Token" ?
-                                  <Image
-                                    boxSize='1.5rem'
-                                    borderRadius='full'
-                                    src={Chains[sendChain]["tokens"][sendToken].img}
-
-                                  /> : <></>
-                                }
-
-                              </Box>
-                              <Spacer />
-                              <Box p='2' >
-                                <Text>
-                                  {sendToken}
-                                </Text>
-                              </Box>
-                            </Flex>
-                          </MenuButton>
-                          <MenuList>
-                            {
-                              Object.keys(Chains[sendChain]["tokens"]).map((key, index) => (
-                                <MenuItem key={index} minH='40px'  onClick={() => updateSendToken(key)}>
-                                  <Image
-                                    boxSize='2rem'
-                                    borderRadius='full'
-                                    src={Chains[sendChain]["tokens"][key].img}
-                                    alt='Simon the pensive'
-                                    mr='12px'
-                                  />
-                                  <span>{Chains[sendChain]["tokens"][key].name}</span>
-                                </MenuItem>
-                              ))
-                            }
-                          </MenuList>
-                        </Menu> : <></>
+                        /> : <></>
                       }
 
-
-                    </Box>
-
-                  </Flex>
-
-
-
-
-
-                  <br></br> <br></br> <br></br>
-
-
-
-                  <InputGroup>
-                    <InputLeftAddon>{sendToken}</InputLeftAddon>
-
-
-                    <NumberInput defaultValue={0} min={0} clampValueOnBlur={false} placeholder='enter token amount'
-                      onChange={updateSendAmount} >
-                      <NumberInputField />
-                      <NumberInputStepper>
-                        <NumberIncrementStepper />
-                        <NumberDecrementStepper />
-                      </NumberInputStepper>
-                    </NumberInput>
-
-
-
-                  </InputGroup>
-
-
-                </CardBody>
-              </Card>
-
-              <br></br>
-              <Card minW="md" >
-                <CardBody  borderWidth={"0.1rem"} borderRadius={"5px"} borderColor={"black"}>
-                  <Flex>
-                    <Box p='4' >
-                      <Menu>
-                        <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
-
-                        <Flex>
-                              <Box p='2'>
-                                {receiveToken != "Select Token" ?
-                                  <Image
-                                    boxSize='1.5rem'
-                                    borderRadius='full'
-                                    src={Chains[receiveChain].img}
-                                  /> : <></>
-                                }
-                              </Box>
-                              <Spacer />
-                              <Box p='2'>
-                              <Text>{receiveChain}</Text>
-                              </Box>
-                            </Flex>
-
-
-                          
-                        </MenuButton>
-                        <MenuList>
-                          {Object.keys(Chains).map((key, index) => (
-                            <MenuItem minH='40px' key={index} onClick={() => updateReceiveChain(key)}>
-                               <Image
-                                    boxSize='2rem'
-                                    borderRadius='full'
-                                    src={Chains[key].img}
-                                    alt='Simon the pensive'
-                                    mr='12px'
-                                  />
-                              <span>{key}</span>
-                            </MenuItem>
-                          ))}
-                        </MenuList>
-                      </Menu>
                     </Box>
                     <Spacer />
-                    {receiveChain != "Select Chain" &&
-                      <Box p='4'>
-                        <Menu>
-                          <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
-                            <Flex>
-                              <Box p='2'>
-                                {receiveToken != "Select Token" ?
-                                  <Image
-                                    boxSize='1.5rem'
-                                    borderRadius='full'
-                                    src={Chains[receiveChain]["tokens"][receiveToken].img}
-                                  /> : <></>
-                                }
-                              </Box>
-                              <Spacer />
-                              <Box p='2'>
-                                <Text>{receiveToken}</Text>
-                              </Box>
-                            </Flex>
-                          </MenuButton>
-                          <MenuList>
-                            {Object.keys(Chains[receiveChain]["tokens"]).map((key, index) => (
-                              <MenuItem minH='40px' key={index} onClick={() => updateReceiveToken(key)}>
-                                <Image
-                                  boxSize='2rem'
-                                  borderRadius='full'
-                                  src={Chains[receiveChain]["tokens"][key].img}
-                                  alt={Chains[receiveChain]["tokens"][key].name}
-                                  mr='12px'
-                                />
-                                <span>{Chains[receiveChain]["tokens"][key].name}</span>
-                              </MenuItem>
-                            ))}
-                          </MenuList>
-                        </Menu>
-                      </Box>
-                    }
+                    <Box p='2' >
+                      <Text>
+                        {sendChain}
+                      </Text>
+                    </Box>
+                  </Flex>
+
+              </MenuButton>
+
+              <MenuList>
+                {
+                  Object.keys(Chains).map((key, index) => (
+
+                    <MenuItem minH='40px' key={index} onClick={() => updateSendChain(key)}>
+                      <Image
+                          boxSize='2rem'
+                          borderRadius='full'
+                          src={Chains[key].img}
+                          alt='Simon the pensive'
+                          mr='12px'
+                        />
+                      <span>{key}</span>
+                    </MenuItem>
+                  ))
+                }
+              </MenuList>
+            </Menu>
+
+
+
+
+          </Box>
+
+          <Spacer />
+
+          <Box  p='4' >
+            {sendChain != "Select Chain" ?
+              <Menu>
+
+                <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+                  <Flex>
+                    <Box p='2' >
+                      {sendToken != "Select Token" ?
+                        <Image
+                          boxSize='1.5rem'
+                          borderRadius='full'
+                          src={Chains[sendChain]["tokens"][sendToken].img}
+
+                        /> : <></>
+                      }
+
+                    </Box>
+                    <Spacer />
+                    <Box p='2' >
+                      <Text>
+                        {sendToken}
+                      </Text>
+                    </Box>
+                  </Flex>
+                </MenuButton>
+                <MenuList>
+                  {
+                    Object.keys(Chains[sendChain]["tokens"]).map((key, index) => (
+                      <MenuItem key={index} minH='40px'  onClick={() => updateSendToken(key)}>
+                        <Image
+                          boxSize='2rem'
+                          borderRadius='full'
+                          src={Chains[sendChain]["tokens"][key].img}
+                          alt='Simon the pensive'
+                          mr='12px'
+                        />
+                        <span>{Chains[sendChain]["tokens"][key].name}</span>
+                      </MenuItem>
+                    ))
+                  }
+                </MenuList>
+              </Menu> : <></>
+            }
+
+
+          </Box>
+
+        </Flex>
+
+
+
+
+
+        <br></br> <br></br> <br></br>
+
+
+
+        <InputGroup>
+          <InputLeftAddon>{sendToken}</InputLeftAddon>
+
+
+          <NumberInput defaultValue={0} min={0} clampValueOnBlur={false} placeholder='enter token amount'
+            onChange={updateSendAmount} >
+            <NumberInputField />
+            <NumberInputStepper>
+              <NumberIncrementStepper />
+              <NumberDecrementStepper />
+            </NumberInputStepper>
+          </NumberInput>
+
+
+
+        </InputGroup>
+
+
+      </CardBody>
+    </Card>
+
+    <br></br>
+    <Card minW="md" >
+      <CardBody  borderWidth={"0.1rem"} borderRadius={"5px"} borderColor={"black"}>
+        <Flex>
+          <Box p='4' >
+            <Menu>
+              <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+
+              <Flex>
+                    <Box p='2'>
+                      {receiveToken != "Select Token" ?
+                        <Image
+                          boxSize='1.5rem'
+                          borderRadius='full'
+                          src={Chains[receiveChain].img}
+                        /> : <></>
+                      }
+                    </Box>
+                    <Spacer />
+                    <Box p='2'>
+                    <Text>{receiveChain}</Text>
+                    </Box>
                   </Flex>
 
 
-                      <Flex>
-                        <Spacer/>
-                        <Box p = "4">
-                          <Heading>
-                            {receiveAmount}
-                          </Heading>
-                          {receiveToken}
+                
+              </MenuButton>
+              <MenuList>
+                {Object.keys(Chains).map((key, index) => (
+                  <MenuItem minH='40px' key={index} onClick={() => updateReceiveChain(key)}>
+                     <Image
+                          boxSize='2rem'
+                          borderRadius='full'
+                          src={Chains[key].img}
+                          alt='Simon the pensive'
+                          mr='12px'
+                        />
+                    <span>{key}</span>
+                  </MenuItem>
+                ))}
+              </MenuList>
+            </Menu>
+          </Box>
+          <Spacer />
+          {receiveChain != "Select Chain" &&
+            <Box p='4'>
+              <Menu>
+                <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+                  <Flex>
+                    <Box p='2'>
+                      {receiveToken != "Select Token" ?
+                        <Image
+                          boxSize='1.5rem'
+                          borderRadius='full'
+                          src={Chains[receiveChain]["tokens"][receiveToken].img}
+                        /> : <></>
+                      }
+                    </Box>
+                    <Spacer />
+                    <Box p='2'>
+                      <Text>{receiveToken}</Text>
+                    </Box>
+                  </Flex>
+                </MenuButton>
+                <MenuList>
+                  {Object.keys(Chains[receiveChain]["tokens"]).map((key, index) => (
+                    <MenuItem minH='40px' key={index} onClick={() => updateReceiveToken(key)}>
+                      <Image
+                        boxSize='2rem'
+                        borderRadius='full'
+                        src={Chains[receiveChain]["tokens"][key].img}
+                        alt={Chains[receiveChain]["tokens"][key].name}
+                        mr='12px'
+                      />
+                      <span>{Chains[receiveChain]["tokens"][key].name}</span>
+                    </MenuItem>
+                  ))}
+                </MenuList>
+              </Menu>
+            </Box>
+          }
+        </Flex>
 
-                        </Box>
-                      </Flex>
-                </CardBody>
-              </Card>
+
+            <Flex>
+              <Spacer/>
+              <Box p = "4">
+                <Heading>
+                  {receiveAmount}
+                </Heading>
+                {receiveToken}
+
+              </Box>
+            </Flex>
+      </CardBody>
+    </Card>
 
 
 
 
-            </CardBody>
-            {isConnected ? (
-              <>
-                <Button outlineColor={'blue'} onClick={() => Swap()} isDisabled={sendChain == receiveChain || sendChain == "Select Chain" || receiveChain == "Select Chain" || sendToken == "Select Token" || receiveToken == "Select Token" || chain.id != Chains[sendChain].id}>Swap</Button>
-                {progressIndex !==0?(
-                  <Center  mt={"1rem"}>
-                    <VStack>
-                  <Progress marginInline={"2rem"}  w={"30rem"} hasStripe value={20*progressIndex} />
-                <Text size={"2xl"} fontWeight={"bold"} >{States[progressIndex]}</Text>
-                </VStack>
-                </Center>
-                ):(<></>)}
+  </CardBody>
+  {isConnected ? (
+    <>
+      <Button outlineColor={'blue'} onClick={() => Swap()} isDisabled={sendChain == receiveChain || sendChain == "Select Chain" || receiveChain == "Select Chain" || sendToken == "Select Token" || receiveToken == "Select Token" || chain.id != Chains[sendChain].id}>Swap</Button>
+      {progressIndex !==0?(
+        <Center  mt={"1rem"}>
+          <VStack>
+        <Progress marginInline={"2rem"}  w={"30rem"} hasStripe value={20*progressIndex} />
+      <Text size={"2xl"} fontWeight={"bold"} >{States[progressIndex]}</Text>
+      </VStack>
+      </Center>
+      ):(<></>)}
+
+      
+    </>
+  ) : (
+    <Button outlineColor={"lightblue"} onClick={() => setDisplayConnections(true)}>Connect Wallet</Button>
+  )}
+</Card>
+<div className="flex justify-center items-center p-5">
+  {loadingState === 2 ? (
+    <Image src='nouns_anim.gif' alt='Nouns Animation' width="160px" height="60px" />
+  ) : loadingState === 1 ? (
+    <Image src='signing_awaiting.gif' alt='Signing Awaiting' width="160px" height="60px" />
+  ) : null}
+</div>
+
+</VStack>
+    </TabPanel>
+    <TabPanel>
+    <VStack>
+
+<Card borderWidth={"0.3rem"} className='outer-panel'>
+  <CardBody >
+    <Card  minW="md" >
+      <CardBody borderWidth={"0.1rem"} borderRadius={"5px"} borderColor={"black"} >
+
+
+        <Flex>
+
+          <Box p='4' >
+
+            <Menu>
+
+              <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+
+
+              <Flex>
+                    <Box p='2' >
+                      {sendChain != "Select Chain" ?
+                        <Image
+                          boxSize='1.5rem'
+                          borderRadius='full'
+                          src={Chains[sendChain].img}
+
+                        /> : <></>
+                      }
+
+                    </Box>
+                    <Spacer />
+                    <Box p='2' >
+                      <Text>
+                        {sendChain}
+                      </Text>
+                    </Box>
+                  </Flex>
+
+              </MenuButton>
+
+              <MenuList>
+                {
+                  Object.keys(Chains).map((key, index) => (
+
+                    <MenuItem minH='40px' onClick={() => updateSendChain(key)}>
+                      <Image
+                          boxSize='2rem'
+                          borderRadius='full'
+                          src={Chains[key].img}
+                          alt='Simon the pensive'
+                          mr='12px'
+                        />
+                      <span>{key}</span>
+                    </MenuItem>
+                  ))
+                }
+              </MenuList>
+            </Menu>
+
+
+
+
+          </Box>
+
+          <Spacer />
+
+          <Box  p='4' >
+            {sendChain != "Select Chain" ?
+              <Menu>
+
+                <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+                  <Flex>
+                    <Box p='2' >
+                      {sendToken != "Select Token" ?
+                        <Image
+                          boxSize='1.5rem'
+                          borderRadius='full'
+                          src={Chains[sendChain]["tokens"][sendToken].img}
+
+                        /> : <></>
+                      }
+
+                    </Box>
+                    <Spacer />
+                    <Box p='2' >
+                      <Text>
+                        {sendToken}
+                      </Text>
+                    </Box>
+                  </Flex>
+                </MenuButton>
+                <MenuList>
+
+                  {
+                    Object.keys(Chains[sendChain]["tokens"]).map((key, index) => (
+                      <MenuItem key={index} minH='40px'  onClick={() => updateSendToken(key)}>
+                        <Image
+                          boxSize='2rem'
+                          borderRadius='full'
+                          src={Chains[sendChain]["tokens"][key].img}
+                          alt='Simon the pensive'
+                          mr='12px'
+                        />
+                        <span>{Chains[sendChain]["tokens"][key].name}</span>
+                      </MenuItem>
+                      
+                    ))
+                  }
+                </MenuList>
+              </Menu> : <></>
+            }
+
+
+          </Box>
+
+        </Flex>
+
+
+
+
+
+        <br></br> <br></br> <br></br>
+
+
+
+        <InputGroup>
+          <InputLeftAddon>{sendToken}</InputLeftAddon>
+
+
+          <NumberInput defaultValue={0} min={0} clampValueOnBlur={false} placeholder='enter token amount'
+            onChange={updateSendAmount} >
+            <NumberInputField />
+            <NumberInputStepper>
+
+              <NumberIncrementStepper />
+              <NumberDecrementStepper />
+            </NumberInputStepper>
+          </NumberInput>
+
+
+
+        </InputGroup>
+
+
+      </CardBody>
+    </Card>
+
+    <br></br>
+    <Card minW="md" >
+      <CardBody  borderWidth={"0.1rem"} borderRadius={"5px"} borderColor={"black"}>
+        <Flex>
+          <Box p='4' >
+            <Menu>
+              <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+
+              <Flex>
+                    <Box p='2'>
+                      {receiveToken != "Select Token" ?
+                        <Image
+                          boxSize='1.5rem'
+                          borderRadius='full'
+                          src={Chains[receiveChain].img}
+                        /> : <></>
+                      }
+                    </Box>
+                    <Spacer />
+                    <Box p='2'>
+                    <Text>{receiveChain}</Text>
+                    </Box>
+                  </Flex>
+
 
                 
-              </>
-            ) : (
-              <Button outlineColor={"lightblue"} onClick={() => setDisplayConnections(true)}>Connect Wallet</Button>
-            )}
-          </Card>
-<div className="flex justify-center items-center p-5">
-            {loadingState === 2 ? (
-              <Image src='nouns_anim.gif' alt='Nouns Animation' width="160px" height="60px" />
-            ) : loadingState === 1 ? (
-              <Image src='signing_awaiting.gif' alt='Signing Awaiting' width="160px" height="60px" />
-            ) : null}
-          </div>
+              </MenuButton>
+              <MenuList>
+                {Object.keys(Chains).map((key, index) => (
+                  <MenuItem minH='40px' key={index} onClick={() => updateReceiveChain(key)}>
+                     <Image
+                          boxSize='2rem'
+                          borderRadius='full'
+                          src={Chains[key].img}
+                          alt='Simon the pensive'
+                          mr='12px'
+                        />
+                    <span>{key}</span>
+                  </MenuItem>
+                ))}
+              </MenuList>
+            </Menu>
+          </Box>
+          <Spacer />
+          {receiveChain != "Select Chain" &&
+            <Box p='4'>
+              <Menu>
+                <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+                  <Flex>
+                    <Box p='2'>
+                      {receiveToken != "Select Token" ?
+                        <Image
+                          boxSize='1.5rem'
+                          borderRadius='full'
+                          src={Chains[receiveChain]["tokens"][receiveToken].img}
+                        /> : <></>
+                      }
+                    </Box>
+                    <Spacer />
+                    <Box p='2'>
+                      <Text>{receiveToken}</Text>
+                    </Box>
+                  </Flex>
+                </MenuButton>
+                <MenuList>
+                  {Object.keys(Chains[receiveChain]["tokens"]).map((key, index) => (
+                    <MenuItem minH='40px' key={index} onClick={() => updateReceiveToken(key)}>
+                      <Image
+                        boxSize='2rem'
+                        borderRadius='full'
+                        src={Chains[receiveChain]["tokens"][key].img}
+                        alt={Chains[receiveChain]["tokens"][key].name}
+                        mr='12px'
+                      />
+                      <span>{Chains[receiveChain]["tokens"][key].name}</span>
+                    </MenuItem>
+                  ))}
+                </MenuList>
+              </Menu>
+            </Box>
+          }
+        </Flex>
 
-        </VStack>
+
+            <Flex>
+              <Spacer/>
+              <Box p = "4">
+                <Heading>
+                  {receiveAmount}
+                </Heading>
+                {receiveToken}
+
+              </Box>
+            </Flex>
+      </CardBody>
+    </Card>
+
+
+
+
+  </CardBody>
+  {isConnected ? (
+    <>
+      <Button outlineColor={'blue'} onClick={() => Swap()} isDisabled={sendChain == receiveChain || sendChain == "Select Chain" || receiveChain == "Select Chain" || sendToken == "Select Token" || receiveToken == "Select Token" || chain.id != Chains[sendChain].id}>Swap</Button>
+      {progressIndex !==0?(
+        <Center  mt={"1rem"}>
+          <VStack>
+        <Progress marginInline={"2rem"}  w={"30rem"} hasStripe value={20*progressIndex} />
+      <Text size={"2xl"} fontWeight={"bold"} >{States[progressIndex]}</Text>
+      </VStack>
+      </Center>
+      ):(<></>)}
+
+      
+    </>
+  ) : (
+    <Button outlineColor={"lightblue"} onClick={() => setDisplayConnections(true)}>Connect Wallet</Button>
+  )}
+</Card>
+<div className="flex justify-center items-center p-5">
+  {loadingState === 2 ? (
+    <Image src='nouns_anim.gif' alt='Nouns Animation' width="160px" height="60px" />
+  ) : loadingState === 1 ? (
+    <Image src='signing_awaiting.gif' alt='Signing Awaiting' width="160px" height="60px" />
+  ) : null}
+</div>
+
+</VStack>
+    </TabPanel>
+    <TabPanel>
+    <VStack>
+
+<Card borderWidth={"0.3rem"} className='outer-panel'>
+  <CardBody >
+    <Card  minW="md" >
+      <CardBody borderWidth={"0.1rem"} borderRadius={"5px"} borderColor={"black"} >
+
+
+        <Flex>
+          
+
+          <Box p='4' >
+
+            <Menu>
+
+              <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+
+
+              <Flex>
+                    <Box p='2' >
+                      {sendChain != "Select Chain" ?
+                        <Image
+                          boxSize='1.5rem'
+                          borderRadius='full'
+                          src={Chains[sendChain].img}
+
+                        /> : <></>
+                      }
+
+                    </Box>
+                    <Spacer />
+                    <Box p='2' >
+                      <Text>
+                        {sendChain}
+                      </Text>
+                    </Box>
+                  </Flex>
+
+              </MenuButton>
+
+              <MenuList>
+                {
+                  Object.keys(Chains).map((key, index) => (
+
+                    <MenuItem minH='40px' onClick={() => updateSendChain(key)}>
+                      <Image
+                          boxSize='2rem'
+                          borderRadius='full'
+                          src={Chains[key].img}
+                          alt='Simon the pensive'
+                          mr='12px'
+                        />
+                      <span>{key}</span>
+                    </MenuItem>
+                  ))
+                }
+              </MenuList>
+            </Menu>
+
+
+
+
+          </Box>
+
+          <Spacer />
+
+          <Box  p='4' >
+            {sendChain != "Select Chain" ?
+              <Menu>
+
+                <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+                  <Flex>
+                    <Box p='2' >
+                      {sendToken != "Select Token" ?
+                        <Image
+                          boxSize='1.5rem'
+                          borderRadius='full'
+                          src={Chains[sendChain]["tokens"][sendToken].img}
+
+                        /> : <></>
+                      }
+
+                    </Box>
+                    <Spacer />
+                    <Box p='2' >
+                      <Text>
+                        {sendToken}
+                      </Text>
+
+                    </Box>
+
+                  </Flex>
+                </MenuButton>
+                <Text fontWeight={"bold"} size={"md"}>Strike Price:</Text>
+                <Input type="number" placeholder="Enter strike price" />
+                <MenuList>
+                  {
+                    Object.keys(Chains[sendChain]["tokens"]).map((key, index) => (
+                      <MenuItem key={index} minH='40px'  onClick={() => updateSendToken(key)}>
+                        <Image
+                          boxSize='2rem'
+                          borderRadius='full'
+                          src={Chains[sendChain]["tokens"][key].img}
+                          alt='Simon the pensive'
+                          mr='12px'
+                        />
+                        <span>{Chains[sendChain]["tokens"][key].name}</span>
+                      </MenuItem>
+                    ))
+                  }
+                </MenuList>
+              </Menu> : <></>
+            }
+
+
+          </Box>
+
+        </Flex>
+
+
+
+
+
+        <br></br> <br></br> <br></br>
+
+
+
+        <InputGroup>
+          <InputLeftAddon>{sendToken}</InputLeftAddon>
+
+
+          <NumberInput defaultValue={0} min={0} clampValueOnBlur={false} placeholder='enter token amount'
+            onChange={updateSendAmount} >
+            <NumberInputField />
+            <NumberInputStepper>
+              <NumberIncrementStepper />
+              <NumberDecrementStepper />
+            </NumberInputStepper>
+          </NumberInput>
+
+
+
+        </InputGroup>
+
+
+      </CardBody>
+    </Card>
+
+    <br></br>
+    <Card minW="md" >
+      <CardBody  borderWidth={"0.1rem"} borderRadius={"5px"} borderColor={"black"}>
+        <Flex>
+          <Box p='4' >
+            <Menu>
+              <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+
+              <Flex>
+                    <Box p='2'>
+                      {receiveToken != "Select Token" ?
+                        <Image
+                          boxSize='1.5rem'
+                          borderRadius='full'
+                          src={Chains[receiveChain].img}
+                        /> : <></>
+                      }
+                    </Box>
+                    <Spacer />
+                    <Box p='2'>
+                    <Text>{receiveChain}</Text>
+                    </Box>
+                  </Flex>
+
+
+                
+              </MenuButton>
+              <MenuList>
+                {Object.keys(Chains).map((key, index) => (
+                  <MenuItem minH='40px' key={index} onClick={() => updateReceiveChain(key)}>
+                     <Image
+                          boxSize='2rem'
+                          borderRadius='full'
+                          src={Chains[key].img}
+                          alt='Simon the pensive'
+                          mr='12px'
+                        />
+                    <span>{key}</span>
+                  </MenuItem>
+                ))}
+              </MenuList>
+            </Menu>
+          </Box>
+          <Spacer />
+          {receiveChain != "Select Chain" &&
+            <Box p='4'>
+              <Menu>
+                <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+                  <Flex>
+                    <Box p='2'>
+                      {receiveToken != "Select Token" ?
+                        <Image
+                          boxSize='1.5rem'
+                          borderRadius='full'
+                          src={Chains[receiveChain]["tokens"][receiveToken].img}
+                        /> : <></>
+                      }
+                    </Box>
+                    <Spacer />
+                    <Box p='2'>
+                      <Text>{receiveToken}</Text>
+                    </Box>
+                  </Flex>
+                </MenuButton>
+                <MenuList>
+                  {Object.keys(Chains[receiveChain]["tokens"]).map((key, index) => (
+                    <MenuItem minH='40px' key={index} onClick={() => updateReceiveToken(key)}>
+                      <Image
+                        boxSize='2rem'
+                        borderRadius='full'
+                        src={Chains[receiveChain]["tokens"][key].img}
+                        alt={Chains[receiveChain]["tokens"][key].name}
+                        mr='12px'
+                      />
+                      <span>{Chains[receiveChain]["tokens"][key].name}</span>
+                    </MenuItem>
+                  ))}
+                </MenuList>
+              </Menu>
+            </Box>
+          }
+        </Flex>
+
+
+            <Flex>
+              <Spacer/>
+              <Box p = "4">
+                <Heading>
+                  {receiveAmount}
+                </Heading>
+                {receiveToken}
+
+              </Box>
+            </Flex>
+      </CardBody>
+    </Card>
+
+
+
+
+  </CardBody>
+  {isConnected ? (
+    <>
+      <Button outlineColor={'blue'} onClick={() => Swap()} isDisabled={sendChain == receiveChain || sendChain == "Select Chain" || receiveChain == "Select Chain" || sendToken == "Select Token" || receiveToken == "Select Token" || chain.id != Chains[sendChain].id}>Swap</Button>
+      {progressIndex !==0?(
+        <Center  mt={"1rem"}>
+          <VStack>
+        <Progress marginInline={"2rem"}  w={"30rem"} hasStripe value={20*progressIndex} />
+      <Text size={"2xl"} fontWeight={"bold"} >{States[progressIndex]}</Text>
+      </VStack>
+      </Center>
+      ):(<></>)}
+
+      
+    </>
+  ) : (
+    <Button outlineColor={"lightblue"} onClick={() => setDisplayConnections(true)}>Connect Wallet</Button>
+  )}
+</Card>
+<div className="flex justify-center items-center p-5">
+  {loadingState === 2 ? (
+    <Image src='nouns_anim.gif' alt='Nouns Animation' width="160px" height="60px" />
+  ) : loadingState === 1 ? (
+    <Image src='signing_awaiting.gif' alt='Signing Awaiting' width="160px" height="60px" />
+  ) : null}
+</div>
+
+</VStack>
+    </TabPanel>
+  </TabPanels>
+</Tabs>
+     
 
       </Center>
 
