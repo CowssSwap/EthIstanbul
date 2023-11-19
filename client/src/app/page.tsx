@@ -1,5 +1,5 @@
 "use client"
-import { useEffect, useState,useRef } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { Center, HStack, VStack, Text, Button, Heading, Divider, Image } from '@chakra-ui/react'
 import { Card, CardHeader, CardBody, CardFooter } from '@chakra-ui/react'
 import { ChevronDownIcon, AddIcon } from '@chakra-ui/icons'
@@ -43,15 +43,16 @@ import {
 
 
 } from '@chakra-ui/react'
-import { useAccount, useConnect, useDisconnect, useWalletClient } from 'wagmi'
-import { signTypedData } from "@wagmi/core"
+import { useAccount, useConnect, useDisconnect, useNetwork, useWalletClient, useSwitchNetwork } from 'wagmi'
+import { signTypedData, getNetwork } from "@wagmi/core"
 import { InjectedConnector } from 'wagmi/connectors/injected'
-import { Chains } from './tokens'
+import { Chains, Tokens } from './tokens'
 import postCreateOrder from '@/utils/postCreateOrder'
 
 export default function Home() {
+  const { chain, chains } = useNetwork()
   const { address, isConnected } = useAccount()
-  const { connect } = useConnect({
+  const { connect, connectors, pendingConnector, isLoading, error } = useConnect({
     connector: new InjectedConnector(),
   })
   const { disconnect } = useDisconnect()
@@ -69,6 +70,8 @@ export default function Home() {
 
   const { isOpen, onOpen, onClose } = useDisclosure()
   const firstField = useRef()
+
+  const [displayConnections, setDisplayConnections] = useState(false);
 
   const [swapsData, setSwapsData] = useState<Swap>([])
 
@@ -107,6 +110,7 @@ export default function Home() {
   const updateSendChain = (val: string) => {
     setSendToken("Select Token")
     setSendChain(val)
+
   }
 
   const updateReceiveChain = (val: string) => {
@@ -114,7 +118,6 @@ export default function Home() {
     setReceiveChain(val)
   }
 
-  
 
   const updateSendAmount = (valueAsString: String, valueasNumber: GLfloat) => {
     if (valueAsString != "") {
@@ -144,7 +147,7 @@ export default function Home() {
     const domain = {
       name: 'CowssChain order',
       version: '1',
-      chainId: 80001,
+      chainId: chain.id,
       verifyingContract: '0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC',
     } as const
 
@@ -163,20 +166,23 @@ export default function Home() {
         { name: "destinationTokenAddress", type: "address" }
       ]
     } as const;
+
+
     if(address == undefined) return;
     const message = {
-      sourceChainId: 80001,//TODO: update dynamically
-      destinationChainId: 1,//TODO: update dynamically
+      sourceChainId: Chains[sendChain].id,//TODO: update dynamically
+      destinationChainId: Chains[receiveChain].id,//TODO: update dynamically
       nonce: 1,
       amountSourceToken: sendAmount,
       minDestinationTokenAmount: receiveAmount,
       expirationTimestamp: expirationTimestamp,
+
       stakeAmount: 1,
       orderIndex:1,
       sourceAddress: address.toString(),
       destinationAddress: address.toString(), //maybe let user input this for more modularity
-      sourceTokenAddress: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",//TODO: update dynamically
-      destinationTokenAddress: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",//TODO: update dynamically
+       sourceTokenAddress: Tokens[sendToken].address, // TODO: change to chanins
+      destinationTokenAddress: Tokens[receiveToken].address, // TODO: change to chains
     } as const;
 
     console.log("swap")
@@ -204,10 +210,10 @@ setLoadingState(0);
     let tempSwapsData = swapsData
     const toAdd = {
       "swapAddress": domain.verifyingContract,
-      "sourceChainId" : message.sourceChainId,
-      "destinationChainId" : message.destinationChainId,
-      "sourceTokenAddress" : message.sourceTokenAddress,
-      "timeout" : message.expirationTimestamp
+      "sourceChainId": message.sourceChainId,
+      "destinationChainId": message.destinationChainId,
+      "sourceTokenAddress": message.sourceTokenAddress,
+      "timeout": message.expirationTimestamp
     }
     tempSwapsData.push(toAdd)
     setSwapsData(tempSwapsData)
@@ -224,6 +230,40 @@ setLoadingState(0);
 
   return (
     <div>
+      {
+        sendChain !== "Select Chain" && isConnected && chain.id !== Chains[sendChain].id && (
+          <div className="bg-orange-500 w-full p-2">
+            <p className="text-black text-center">
+              Change the network in your wallet
+            </p>
+          </div>
+        )
+      }
+
+
+
+      {displayConnections && !isConnected && (
+        <div className="fixed inset-0 z-50 flex justify-center items-center bg-black bg-opacity-50">
+          <div className="bg-white p-4 rounded-lg shadow-lg">
+            {connectors.map((connector) => (
+              <Button
+                className="m-2" // Again, assuming you have some custom styling for your buttons
+                disabled={!connector.ready}
+                key={connector.id}
+                onClick={() => connect({ connector })}
+              >
+                {connector.name}
+                {!connector.ready && ' (unsupported)'}
+                {isLoading && connector.id === pendingConnector?.id && ' (connecting)'}
+              </Button>
+            ))}
+            <Button className="text-red-500" onClick={() => setDisplayConnections(false)}>Quit</Button>
+            {error && <div className="text-red-500">{error.message}</div>}
+          </div>
+        </div>
+      )}
+
+
 
       <Flex>
         <Box p='4' >
@@ -241,20 +281,20 @@ setLoadingState(0);
             <>
               {/* <Text style={{ float: "right" }} align={'right'}>Connected to {address}
               </Text> */}
-             
+
               <Button style={{ float: "right" }} outlineColor={"black"} onClick={() => disconnect()}>Disconnect</Button>
 
             </>
           ) : (
-            <Button style={{ float: "right" }} outlineColor={"lightblue"} onClick={() => connect()}>Connect Wallet</Button>
+            <Button style={{ float: "right" }} outlineColor={"lightblue"} onClick={() => setDisplayConnections(true)}>Connect Wallet</Button>
           )}
 
         </Box>
         {isConnected ? (
         <Box p='4'>
-          <Button outlineColor={"black"}  onClick={onOpen}>
-          Running Swaps
-        </Button>
+          <Button outlineColor={"black"} onClick={onOpen}>
+            Running Swaps
+          </Button>
         </Box>
         ):<></>}
       </Flex>
@@ -269,6 +309,42 @@ setLoadingState(0);
 
 
                   <Flex>
+
+                    <Box p='4' >
+
+                      <Menu>
+
+                        <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+
+
+                          <Text>
+                            {sendChain}
+
+                          </Text>
+
+
+                        </MenuButton>
+
+                        <MenuList>
+                          {
+                            Object.keys(Chains).map((key, index) => (
+
+                              <MenuItem minH='40px' onClick={() => updateSendChain(key)}>
+
+                                <span>{key}</span>
+                              </MenuItem>
+                            ))
+                          }
+                        </MenuList>
+                      </Menu>
+
+
+
+
+                    </Box>
+
+                    <Spacer />
+
                     <Box p='4' >
                       {sendChain != "Select Chain" ?
                         <Menu>
@@ -316,53 +392,6 @@ setLoadingState(0);
 
                     </Box>
 
-                    <Spacer />
-                    <Box p='4' >
-
-                      <Menu>
-
-                        <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
-
-                        <Flex>
-                              <Box p='2' >
-                              {sendChain != "Select Chain" ?
-                          
-                          <Image
-                            boxSize='1.5rem'
-                            borderRadius='full'
-                            src={Chains[sendChain]["img"]}
-
-                          /> : <></>
-                        }
-                              </Box>
-                              <Spacer />
-                              <Box p='2' >
-                              <Text>
-                            {sendChain}
-
-                          </Text>
-                              </Box>
-                            </Flex>
-
-
-                        </MenuButton>
-
-                        <MenuList>
-                          {
-                            Object.keys(Chains).map((key, index) => (
-                              <MenuItem minH='40px' onClick={() => updateSendChain(key)}>
-
-                                <span>{key}</span>
-                              </MenuItem>
-                            ))
-                          }
-                        </MenuList>
-                      </Menu>
-
-
-
-
-                    </Box>
                   </Flex>
 
 
@@ -397,143 +426,79 @@ setLoadingState(0);
               <br></br>
               <Card minW="md" >
                 <CardBody>
-
                   <Flex>
                     <Box p='4' >
-
-                      {receiveChain != "Select Chain" ?
+                      <Menu>
+                        <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+                          <Text>{receiveChain}</Text>
+                        </MenuButton>
+                        <MenuList>
+                          {Object.keys(Chains).map((key, index) => (
+                            <MenuItem minH='40px' key={index} onClick={() => updateReceiveChain(key)}>
+                              <span>{key}</span>
+                            </MenuItem>
+                          ))}
+                        </MenuList>
+                      </Menu>
+                    </Box>
+                    <Spacer />
+                    {receiveChain != "Select Chain" &&
+                      <Box p='4'>
                         <Menu>
                           <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
-                          <Flex>
-                              <Box p='2' >
+                            <Flex>
+                              <Box p='2'>
                                 {receiveToken != "Select Token" ?
                                   <Image
                                     boxSize='1.5rem'
                                     borderRadius='full'
                                     src={Chains[receiveChain]["tokens"][receiveToken].img}
-
                                   /> : <></>
                                 }
-
                               </Box>
                               <Spacer />
-                              <Box p='2' >
-                                <Text>
-                                {receiveToken}
-                                </Text>
+                              <Box p='2'>
+                                <Text>{receiveToken}</Text>
                               </Box>
                             </Flex>
-                           
                           </MenuButton>
                           <MenuList>
-                            {
-                              Object.keys(Chains[receiveChain]["tokens"]).map((key, index) => (
-                                <MenuItem minH='40px' onClick={() => updateReceiveToken(key)}>
-                                  <Image
-                                    boxSize='2rem'
-                                    borderRadius='full'
-                                    src={Chains[receiveChain]["tokens"][key].img}
-                                    alt='Simon the pensive'
-                                    mr='12px'
-                                  />
-                                  <span>{Chains[receiveChain]["tokens"][key].name}</span>
-                                </MenuItem>
-                              ))
-                            }
+                            {Object.keys(Chains[receiveChain]["tokens"]).map((key, index) => (
+                              <MenuItem minH='40px' key={index} onClick={() => updateReceiveToken(key)}>
+                                <Image
+                                  boxSize='2rem'
+                                  borderRadius='full'
+                                  src={Chains[receiveChain]["tokens"][key].img}
+                                  alt={Chains[receiveChain]["tokens"][key].name}
+                                  mr='12px'
+                                />
+                                <span>{Chains[receiveChain]["tokens"][key].name}</span>
+                              </MenuItem>
+                            ))}
                           </MenuList>
                         </Menu>
-                        : <></>
-                      }
-
-                    </Box>
-
-                    <Spacer />
-                    <Box p='4' >
-                      <Menu>
-
-                        <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
-
-                        <Flex>
-                              <Box p='2' >
-                              {receiveChain != "Select Chain" ?
-                          
-                          <Image
-                            boxSize='1.5rem'
-                            borderRadius='full'
-                            src={Chains[receiveChain]["img"]}
-
-                          /> : <></>
-                        }
-                              </Box>
-                              <Spacer />
-                              <Box p='2' >
-                              <Text>
-                            {receiveChain}
-
-                          </Text>
-                          
-                              </Box>
-                            </Flex>
-                        
-
-                          
-
-
-                        </MenuButton>
-
-                        <MenuList>
-                          {
-                            Object.keys(Chains).map((key, index) => (
-                              <MenuItem minH='40px' onClick={() => updateReceiveChain(key)}>
-
-                                <span>{key}</span>
-
-                              </MenuItem>
-                            ))
-                          }
-                        </MenuList>
-                      </Menu>
-
-
-
-
-                    </Box>
-                  </Flex>
-
-
-
-
-                  <br></br> 
-                    <Flex>
-                      <Spacer/>
-                      <Box p='4'>
-                      <Heading>
-                    {receiveAmount}
-                  </Heading>
-                  {receiveChain}
                       </Box>
-                    
-               
-
-                  </Flex>   
+                    }
+                  </Flex>
 
                 </CardBody>
               </Card>
 
 
 
+
             </CardBody>
             {isConnected ? (
               <>
-                <Button outlineColor={'blue'} onClick={() => Swap()}>Swap</Button>
+                <Button outlineColor={'blue'} onClick={() => Swap()} isDisabled={sendChain == receiveChain || sendChain == "Select Chain" || receiveChain == "Select Chain" || sendToken == "Select Token" || receiveToken == "Select Token" || chain.id != Chains[sendChain].id}>Swap</Button>
               </>
             ) : (
-              <Button outlineColor={"lightblue"} onClick={() => connect()}>Connect Wallet</Button>
+              <Button outlineColor={"lightblue"} onClick={() => setDisplayConnections(true)}>Connect Wallet</Button>
             )}
           </Card>
 <div className="flex justify-center items-center p-5">
             {loadingState === 2 ? (
-              <Image src='nouns_anim.gif' alt='Nouns Animation' width="160px" height="60px"/>
+              <Image src='nouns_anim.gif' alt='Nouns Animation' width="160px" height="60px" />
             ) : loadingState === 1 ? (
               <Image src='signing_awaiting.gif' alt='Signing Awaiting' width="160px" height="60px" />
             ) : null}
