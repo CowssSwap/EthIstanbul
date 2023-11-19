@@ -132,7 +132,7 @@ export default function Home() {
         { name: "amountSourceToken", type: "uint256" },
         { name: "minDestinationTokenAmount", type: "uint256" },
         { name: "expirationTimestamp", type: "uint256" },
-        { name: "stakeOrder", type: "uint256" },
+        { name: "stakeAmount", type: "uint256" },
         { name: "sourceAddress", type: "address" },
         { name: "destinationAddress", type: "address" },
         { name: "sourceTokenAddress", type: "address" },
@@ -147,7 +147,8 @@ export default function Home() {
       amountSourceToken: sendAmount,
       minDestinationTokenAmount: receiveAmount,
       expirationTimestamp: expirationTimestamp,
-      stakeOrder: 1,
+      stakeAmount: 1,
+      orderIndex:1,
       sourceAddress: address.toString(),
       destinationAddress: address.toString(), //maybe let user input this for more modularity
       sourceTokenAddress: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",//TODO: update dynamically
@@ -164,6 +165,7 @@ export default function Home() {
         primaryType: 'Order',
         types,
       })
+
       await postCreateOrder(message,address,signature)
       console.log(signature)
       setLoadingState(2);

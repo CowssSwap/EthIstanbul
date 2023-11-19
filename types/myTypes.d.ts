@@ -30,17 +30,19 @@ export interface DbUser extends Document {
 
   export interface Order {
     
-  sourceChainId: number;
+    
+    sourceChainId: number;
   destinationChainId: number;
-  nonce: number; //have to generate it frontend site
+  nonce: number;
   amountSourceToken: number;
   minDestinationTokenAmount: number;
   expirationTimestamp: number;
-  stakeOrder:number;
-  sourceAddress: string;
-  destinationAddress: string;
-  sourceTokenAddress: string;
-  destinationTokenAddress: string;
+  stakeAmount: number;
+  orderIndex: number;
+  sourceAddress: string; // Assuming address is represented as a string in TypeScript
+  destinationAddress: string; // Assuming address is represented as a string in TypeScript
+  sourceTokenAddress: string; // Assuming address is represented as a string in TypeScript
+  destinationTokenAddress: string; // Assuming address is represented as a string in TypeScript
 
 
   }
