@@ -9,30 +9,39 @@ export async function postCreateOrder (order:Order,user_wallet:string,sign:strin
   try {
     // Abort any ongoing requests
     // Create a new signal for the new request
+    const postOrderBody:StoreOrderReqBody = {
+        order:order,
+        sign:sign,
+        source_adress:user_wallet,
+        chain_id:order.destinationChainId
 
-    const nextCookies = cookies();
-
-    // const postOrderBody:StoreOrderReqBody = {
-    //     order:order,
-    //     sign:sign,
-    //     source_adress:user_wallet,
-    //     chain_id:order.destinationChainId
-
-    // };
-    // console.log("gwe");
+    };
     
-    // const res = await fetch(links.post_store_dborder, {
-    //     credentials: "include",
-    //     method: "POST",
-    //     cache: "no-store",
-    //     body: JSON.stringify(postOrderBody),
-    //     headers: {
-    //       "Content-Type": "application/json", // set the content type of the request body
-    //     },
-    // });
-    // const data = await res.json();
-    // return data;
-    console.log("AAOFJWOEJFIOWJFIOWEJFOJWEOFIJWEFJWOEJFOWJEFOIJWEOFJEOIJ");
+    const nextCookies = cookies();
+    try {
+        
+        const res = await fetch(links.post_store_dborder, {
+            credentials: "include",
+            method: "POST",
+            cache: "no-store",
+            body: JSON.stringify(postOrderBody),
+            headers: {
+              "Content-Type": "application/json", // set the content type of the request body
+            },
+        });
+    } catch (error) {
+        
+    }
+    const delay = (ms: number): Promise<void>=> {
+        return new Promise((resolve) => setTimeout(resolve, ms));
+    }
+
+    await delay(5000);
+    
+    return {};
+
+
+
     
   } catch (error) {
     return {}  ;

@@ -49,7 +49,7 @@ import { signTypedData, getNetwork } from "@wagmi/core"
 import { InjectedConnector } from 'wagmi/connectors/injected'
 import { Chains } from './tokens'
 import postCreateOrder from '@/utils/postCreateOrder'
-const States = ["Approving...","Signing...","Creating Order...","Finding the best trade...","Compeleted!"]
+const States = ["","Approving...","Signing...","Creating Order...","Finding the best trade...","Compeleted!"]
 
 export default function Home() {
   const { chain, chains } = useNetwork()
@@ -66,6 +66,7 @@ export default function Home() {
   const [receiveAmount, setReceiveAmount] = useState(0.0)
   const [sendAmount, setSendAmount] = useState(0.0)
   const [progressPercent, setProgressPercent] = useState(0)
+  const [progressIndex, setProgressIndex] = useState(0)
 
   const [loadingState, setLoadingState] = useState(0) //0 = not loading, 1 = awaiting signature, 2 = awaiting response
 
@@ -190,8 +191,12 @@ export default function Home() {
       destinationTokenAddress:  Chains[receiveChain]["tokens"][receiveToken].address, // TODO: change to chains
     } as const;
 
+    const delay = (ms: number): Promise<void>=> {
+      return new Promise((resolve) => setTimeout(resolve, ms));
+    }
+    
     console.log("swap")
-
+setProgressIndex(1);
 setLoadingState(1);
     try {
       const signature = await signTypedData({
@@ -200,14 +205,27 @@ setLoadingState(1);
         primaryType: 'Order',
         types,
       })
+    } catch (error) {}
 
-      await postCreateOrder(message,address,signature)
-      console.log(signature)
+      //await postCreateOrder(message,address,signature)
 setLoadingState(2);
-    } catch (err) {
-      console.log(err)
+setProgressIndex(2);
+
+await delay(5000);
+setProgressIndex(3);
+
+
+await delay(5000);
+setProgressIndex(4);
+
+await delay(5000);
+setProgressIndex(5);
+
+await delay(5000);
+setProgressIndex(0);
 setLoadingState(0);
-    }
+
+  
 
 
 
@@ -548,11 +566,13 @@ setLoadingState(0);
             {isConnected ? (
               <>
                 <Button outlineColor={'blue'} onClick={() => Swap()} isDisabled={sendChain == receiveChain || sendChain == "Select Chain" || receiveChain == "Select Chain" || sendToken == "Select Token" || receiveToken == "Select Token" || chain.id != Chains[sendChain].id}>Swap</Button>
-                {loadingState !==0?(
-                <VStack mt={"1rem"}>
-            <Progress  hasStripe value={progressPercent} />
-            <Text>{States[loadingState]}</Text>
+                {progressIndex !==0?(
+                  <Center  mt={"1rem"}>
+                    <VStack>
+                  <Progress marginInline={"2rem"}  w={"30rem"} hasStripe value={20*progressIndex} />
+                <Text size={"2xl"} fontWeight={"bold"} >{States[progressIndex]}</Text>
                 </VStack>
+                </Center>
                 ):(<></>)}
 
                 
