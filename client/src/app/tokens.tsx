@@ -43,7 +43,7 @@ export const Chains = {
         },
         "LINK": {
             "address": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
-            "chainId": 1,
+            "chainId": 100,
             "name": "ChainLink",
             "img": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
     
@@ -97,17 +97,64 @@ export const Chains = {
         }
     } },
 
-    "Starknet ": { id: 100, img: "https://s2.coinmarketcap.com/static/img/coins/200x200/22691.png", tokens: {
-        "USDC": {
-            "address": "0xddafbb505ad214d7b80b1f830fccc89b60fb7a83",
-            "chainId": 100,
-            "name": "USDCoin",
-            "img": "https://s2.coinmarketcap.com/static/img/coins/200x200/22691.png"
+    "Neon EVM MainNet ": { id: 245022934, img: "https://icons.llamao.fi/icons/chains/rsz_neon.jpg", tokens: {
+        "wNEON": {
+            "address": "0x202C35e517Fa803B537565c40F0a6965D7204609",
+            "chainId": 245022934,
+            "name": "wNEON",
+            "img": "https://raw.githubusercontent.com/neonlabsorg/token-list/master/assets/wrapped-neon-logo.svg"
         },
-        "LINK": {
-            "address": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
-            "chainId": 1,
-            "name": "ChainLink",
+        "wSOL": {
+            "address": "0x5f38248f339Bf4e84A2caf4e4c0552862dC9F82a",
+            "chainId": 245022934,
+            "name": "wNEON",
+            "img": "https://raw.githubusercontent.com/neonlabsorg/token-list/master/assets/solana-wsol-logo.svg"
+        },
+
+        "USDC": {
+            "address": "0xEA6B04272f9f62F997F666F07D3a974134f7FFb9",
+            "chainId": 245022934,
+            "name": "USDC",
+            "img": "https://raw.githubusercontent.com/neonlabsorg/token-list/master/assets/usd-coin-usdc-logo.svg"
+        },
+
+        "USDT": {
+            "address": "0x5f0155d08eF4aaE2B500AefB64A3419dA8bB611a	",
+            "chainId": 245022934,
+            "name": "USDT",
+            "img": "https://raw.githubusercontent.com/neonlabsorg/token-list/master/assets/tether-usdt-logo.svg"
+        },
+
+        "BTC": {
+            "address": "0x54EcEC9D995A6CbFF3838F6a8F38099E518805d7	",
+            "chainId": 245022934,
+            "name": "BTC (Sollet)",
+            "img": "https://raw.githubusercontent.com/neonlabsorg/token-list/master/assets/sollet-wbtc-logo.svg"
+        },
+
+        "BTC": {
+            "address": "0xcFFd84d468220c11be64dc9dF64eaFE02AF60e8A	",
+            "chainId": 245022934,
+            "name": "BTC (Sollet)",
+            "img": "https://raw.githubusercontent.com/neonlabsorg/token-list/master/assets/wormhole-weth-logo.svg"
+        },
+       
+    } 
+
+
+    },
+
+    "Gnosis Chiado Testnet": { id: 10200, img: "https://gnosisscan.io/images/svg/brands/main.svg?v=23.11.2.1", tokens: {
+        "USDC": {
+            "address": "0x7aDD3eEe9B233d15A31C45809C3B92178D017d2D",
+            "chainId": 10200,
+            "name": "USDCoin",
+            "img": "https://raw.githubusercontent.com/neonlabsorg/token-list/master/assets/usd-coin-usdc-logo.svg"
+        },
+        "WETH": {
+            "address": "0x014A442480DbAD767b7615E55E271799889FA1a7",
+            "chainId": 10200,
+            "name": "Wrapped Ether",
             "img": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
     
         }
@@ -116,5 +163,109 @@ export const Chains = {
 
     },
 
+     "Mantle": { id: 5000, img: "https://assets.coingecko.com/coins/images/30983/standard/mantle.jpeg?1696529822", tokens: {
+        "USDT": {
+            "address": "0x201eba5cc46d216ce6dc03f6a759e8e766e956ae",
+            "chainId": 5000,
+            "name": "Tether",
+            "img": "https://assets.coingecko.com/coins/images/325/standard/Tether.png?1696501661"
+        },
+        "WMNT": {
+            "address": "0x78c1b0c915c4faa5fffa6cabf0219da63d7f4cb8",
+            "chainId": 5000,
+            "name": "Wrapped Mantle",
+            "img": "https://assets.coingecko.com/coins/images/30983/standard/mantle.jpeg?1696529822"
+    
+        }
+    } 
+
+
+    },
+
+    "Celo": { id: 42220, img: "https://icons.llamao.fi/icons/chains/rsz_celo.jpg", tokens: {
+        "BTC": {
+            "address": "0xD629eb00dEced2a080B7EC630eF6aC117e614f1b",
+            "chainId": 5000,
+            "name": "Wrapped Bitcoin",
+            "img": "https://raw.githubusercontent.com/ubeswap/default-token-list/master/assets/asset_WBTC.png"
+        },
+        "CELO": {
+            "address": "0x471EcE3750Da237f93B8E339c536989b8978a438",
+            "chainId": 5000,
+            "name": "Celo",
+            "img": "https://raw.githubusercontent.com/ubeswap/default-token-list/master/assets/asset_CELO.png"
+    
+        },
+        "WETH": {
+            "address": "0x2DEf4285787d58a2f811AF24755A8150622f4361",
+            "chainId": 5000,
+            "name": "Wrapped Ether",
+            "img": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
+    
+        }
+    } 
+
+    
+
+
+    },
+
+    "Arbitrum One": { id: 42161, img: "https://icons.llamao.fi/icons/chains/rsz_arbitrum.jpg", tokens: {
+        "1INCH": {
+            "address": "0x6314C31A7a1652cE482cffe247E9CB7c3f4BB9aF",
+            "chainId": 42161,
+            "name": "1inch",
+            "img": "https://assets.coingecko.com/coins/images/13469/thumb/1inch-token.png?1608803028"
+        },
+        "AAVE": {
+            "address": "0xba5DdD1f9d7F570dc94a51479a000E3BCE967196",
+            "chainId": 42161,
+            "name": "Aave",
+            "img": "https://assets.coingecko.com/coins/images/12645/thumb/AAVE.png?1601374110"
+    
+        },
+        "API3": {
+            "address": "0xF01dB12F50D0CDF5Fe360ae005b9c52F92CA7811",
+            "chainId": 42161,
+            "name": "API3",
+            "img": "https://assets.coingecko.com/coins/images/13256/thumb/api3.jpg?1606751424"
+    
+        },
+        "ARB": {
+            "address": "0x912CE59144191C1204E64559FE8253a0e49E6548",
+            "chainId": 42161,
+            "name": "Arbitrum",
+            "img": "https://arbitrum.foundation/logo.png"
+    
+        },
+        "BUSD": {
+            "address": "0x31190254504622cEFdFA55a7d3d272e6462629a2",
+            "chainId": 42161,
+            "name": "Binance USD",
+            "img": "https://assets.coingecko.com/coins/images/9576/thumb/BUSD.png?1568947766"
+    
+        },
+        "cbETH": {
+            "address": "0x1DEBd73E752bEaF79865Fd6446b0c970EaE7732f",
+            "chainId": 42161,
+            "name": "Coinbase Wrapped Staked ETH",
+            "img": "https://assets.coingecko.com/coins/images/27008/large/cbeth.png"
+    
+        },
+        "CELO": {
+            "address": "0x4E51aC49bC5e2d87e0EF713E9e5AB2D71EF4F336",
+            "chainId": 42161,
+            "name": "Celo native asset (Wormhole)",
+            "img": "https://raw.githubusercontent.com/wormhole-foundation/wormhole-token-list/main/assets/celo_wh.png"
+    
+        }
+    } 
+
+    
+
+
+    },
+
 
 }
+
