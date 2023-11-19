@@ -182,7 +182,9 @@ export default function Home() {
 
     if(address == undefined) return;
     const message = {
+      //@ts-ignore
       sourceChainId: Chains[sendChain].id,//TODO: update dynamically
+      //@ts-ignore
       destinationChainId: Chains[receiveChain].id,//TODO: update dynamically
       nonce: 1,
       amountSourceToken: sendAmount,
@@ -193,7 +195,9 @@ export default function Home() {
       orderIndex:1,
       sourceAddress: address.toString(),
       destinationAddress: address.toString(), //maybe let user input this for more modularity
+      //@ts-ignore
        sourceTokenAddress: Chains[sendChain]["tokens"][sendToken].address, // TODO: change to chanins
+       //@ts-ignore
       destinationTokenAddress:  Chains[receiveChain]["tokens"][receiveToken].address, // TODO: change to chains
     } as const;
 
