@@ -8,6 +8,7 @@ import axios from 'axios';
 
 import {
   Menu,
+  Progress,
   MenuButton,
   MenuList,
   MenuItem,
@@ -48,6 +49,7 @@ import { signTypedData, getNetwork } from "@wagmi/core"
 import { InjectedConnector } from 'wagmi/connectors/injected'
 import { Chains } from './tokens'
 import postCreateOrder from '@/utils/postCreateOrder'
+const States = ["Approving...","Signing...","Creating Order...","Finding the best trade...","Compeleted!"]
 
 export default function Home() {
   const { chain, chains } = useNetwork()
@@ -63,6 +65,7 @@ export default function Home() {
   const [receiveChain, setReceiveChain] = useState("Select Chain")
   const [receiveAmount, setReceiveAmount] = useState(0.0)
   const [sendAmount, setSendAmount] = useState(0.0)
+  const [progressPercent, setProgressPercent] = useState(0)
 
   const [loadingState, setLoadingState] = useState(0) //0 = not loading, 1 = awaiting signature, 2 = awaiting response
 
@@ -303,10 +306,10 @@ setLoadingState(0);
       <Center mt={"5rem"}>
         <VStack>
 
-          <Card>
+          <Card borderWidth={"0.3rem"} className='outer-panel'>
             <CardBody >
-              <Card minW="md" >
-                <CardBody >
+              <Card  minW="md" >
+                <CardBody borderWidth={"0.1rem"} borderRadius={"5px"} borderColor={"black"} >
 
 
                   <Flex>
@@ -366,7 +369,7 @@ setLoadingState(0);
 
                     <Spacer />
 
-                    <Box p='4' >
+                    <Box  p='4' >
                       {sendChain != "Select Chain" ?
                         <Menu>
 
@@ -446,7 +449,7 @@ setLoadingState(0);
 
               <br></br>
               <Card minW="md" >
-                <CardBody>
+                <CardBody  borderWidth={"0.1rem"} borderRadius={"5px"} borderColor={"black"}>
                   <Flex>
                     <Box p='4' >
                       <Menu>
@@ -548,6 +551,14 @@ setLoadingState(0);
             {isConnected ? (
               <>
                 <Button outlineColor={'blue'} onClick={() => Swap()} isDisabled={sendChain == receiveChain || sendChain == "Select Chain" || receiveChain == "Select Chain" || sendToken == "Select Token" || receiveToken == "Select Token" || chain.id != Chains[sendChain].id}>Swap</Button>
+                {loadingState !==0?(
+                <VStack mt={"1rem"}>
+            <Progress  hasStripe value={progressPercent} />
+            <Text>{States[loadingState]}</Text>
+                </VStack>
+                ):(<></>)}
+
+                
               </>
             ) : (
               <Button outlineColor={"lightblue"} onClick={() => setDisplayConnections(true)}>Connect Wallet</Button>
