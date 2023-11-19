@@ -41,13 +41,15 @@ import {
 
 
 } from '@chakra-ui/react'
-import { useAccount, useConnect, useDisconnect, useWalletClient, useSwitchNetwork } from 'wagmi'
-import { signTypedData } from "@wagmi/core"
+import { useAccount, useConnect, useDisconnect, useNetwork, useWalletClient, useSwitchNetwork } from 'wagmi'
+import { signTypedData, getNetwork } from "@wagmi/core"
 import { InjectedConnector } from 'wagmi/connectors/injected'
 import { Chains, Tokens } from './tokens'
 
 
+
 export default function Home() {
+  const { chain, chains } = useNetwork()
   const { address, isConnected } = useAccount()
   const { connect, connectors, pendingConnector, isLoading, error } = useConnect({
     connector: new InjectedConnector(),
@@ -83,9 +85,7 @@ export default function Home() {
 
   const updateSendChain = (val: string) => {
     setSendChain(val)
-    const network = useSwitchNetwork({
-      chainId: 1,
-    })
+
   }
 
   const updateReceiveChain = (val: string) => {
@@ -125,7 +125,7 @@ export default function Home() {
     const domain = {
       name: 'CowssChain order',
       version: '1',
-      chainId: 80001,
+      chainId: chain.id,
       verifyingContract: '0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC',
     } as const
 
@@ -202,6 +202,17 @@ export default function Home() {
 
   return (
     <div>
+      {
+        sendChain !== "Select Chain" && isConnected && chain.id !== Chains[sendChain].id && (
+          <div className="bg-orange-500 w-full p-2">
+            <p className="text-black text-center">
+              Change the network in your wallet
+            </p>
+          </div>
+        )
+      }
+
+
 
       {displayConnections && !isConnected && (
         <div className="fixed inset-0 z-50 flex justify-center items-center bg-black bg-opacity-50">
@@ -450,7 +461,7 @@ export default function Home() {
             </CardBody>
             {isConnected ? (
               <>
-                <Button outlineColor={'blue'} onClick={() => Swap()} isDisabled={sendChain == receiveChain || sendChain == "Select Chain" || receiveChain == "Select Chain" || sendToken == "Select Token" || receiveToken == "Select Token"}>Swap</Button>
+                <Button outlineColor={'blue'} onClick={() => Swap()} isDisabled={sendChain == receiveChain || sendChain == "Select Chain" || receiveChain == "Select Chain" || sendToken == "Select Token" || receiveToken == "Select Token" || chain.id != Chains[sendChain].id}>Swap</Button>
               </>
             ) : (
               <Button outlineColor={"lightblue"} onClick={() => setDisplayConnections(true)}>Connect Wallet</Button>
