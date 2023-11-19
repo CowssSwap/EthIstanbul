@@ -98,6 +98,7 @@ export default function Home() {
         let y = factor * sendAmount 
          setReceiveAmount(y.toFixed(5))
       } catch (error) {
+        setReceiveAmount(sendAmount * 1.20)
         console.error('Error fetching users:', error.message);
       }
    }
@@ -673,25 +674,25 @@ setProgressIndex(0);
                 {
                   Object.keys(Chains).map((key, index) => (
 
-                    <MenuItem minH='40px' onClick={() => updateSendChain(key)}>
-                      <Image
-                          boxSize='2rem'
-                          borderRadius='full'
-                          src={Chains[key].img}
-                          alt='Simon the pensive'
-                          mr='12px'
-                        />
-                      <span>{key}</span>
-                    </MenuItem>
-                  ))
-                }
-              </MenuList>
-            </Menu>
+                              <MenuItem minH='40px' onClick={() => updateSendChain(key)}>
+                                <Image
+                                    boxSize='2rem'
+                                    borderRadius='full'
+                                    src={Chains[key].img}
+                                    alt='Simon the pensive'
+                                    mr='12px'
+                                  />
+                                <span>{key}</span>
+                              </MenuItem>
+                            ))
+                          }
+                        </MenuList>
+                      </Menu>
 
 
 
 
-          </Box>
+                    </Box>
 
           <Spacer />
 
