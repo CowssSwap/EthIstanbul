@@ -160,7 +160,7 @@ export default function Home() {
       version: '1',
       //@ts-ignore
       chainId: chain.id,
-      verifyingContract: '0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC',
+      verifyingContract: '0x9c5952109F16D8c6F8D8D2288C1b0b24C28378bD',
     } as const
 
     const types = {
@@ -485,7 +485,7 @@ setProgressIndex(0);
                   }
                 </MenuList>
               </Menu> : <></>
-            }
+            } 
 
 
           </Box>
