@@ -47,7 +47,7 @@ export interface DbUser extends Document {
 
 
   export interface DbOrder{
-    filecoin_hash:string;
+    sign:string;
     source_adress:string;
     chain_id:number;
     order:Order;
@@ -56,6 +56,7 @@ export interface DbUser extends Document {
  
   export interface StoreOrderReqBody{
     order:Order;
+    sign:string;
     source_adress:string;
     chain_id:number;
   }

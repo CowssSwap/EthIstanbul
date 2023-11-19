@@ -109,6 +109,7 @@ const completeOrderHook = {
     target: DestionationMediator.address,
     callData: DestionationMediator.interface.encodeFunctionData("depositFunds", [
       jsonToBytes(dborder.order),
+      dborder.sign,
 
     ]),
     // Approximate gas limit determined with Tenderly.
