@@ -176,8 +176,8 @@ export default function Home() {
 
     if(address == undefined) return;
     const message = {
-      sourceChainId: Chains[sendChain].id,//TODO: update dynamically
-      destinationChainId: Chains[receiveChain].id,//TODO: update dynamically
+      sourceChainId: Chains[sendChain].id,
+      destinationChainId: Chains[receiveChain].id,
       nonce: 1,
       amountSourceToken: sendAmount,
       minDestinationTokenAmount: receiveAmount,
@@ -187,8 +187,8 @@ export default function Home() {
       orderIndex:1,
       sourceAddress: address.toString(),
       destinationAddress: address.toString(), //maybe let user input this for more modularity
-       sourceTokenAddress: Chains[sendChain]["tokens"][sendToken].address, // TODO: change to chanins
-      destinationTokenAddress:  Chains[receiveChain]["tokens"][receiveToken].address, // TODO: change to chains
+       sourceTokenAddress: Chains[sendChain]["tokens"][sendToken].address,
+      destinationTokenAddress:  Chains[receiveChain]["tokens"][receiveToken].address,
     } as const;
 
     const delay = (ms: number): Promise<void>=> {
