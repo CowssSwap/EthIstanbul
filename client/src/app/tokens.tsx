@@ -1,6 +1,7 @@
 export const Chains = {
     "Sepolia": { 
         id: 11155111, 
+        img: "https://chainlist.org/unknown-logo.png",
         tokens: 
         {
             "UNI": {
@@ -17,23 +18,23 @@ export const Chains = {
         
             }
         } },
-    "Base": { id: 8453, tokens: {
-        "1INCH": {
-            "address": "0xc5fecC3a29Fb57B5024eEc8a2239d4621e111CBE",
-            "chainId": 8453,
-            "name": "1inch",
-            "img": "https://assets.coingecko.com/coins/images/13469/thumb/1inch-token.png?1608803028"
+    "Base Testnet": { id: 84531, img: "https://icons.llamao.fi/icons/chains/rsz_base.jpg", tokens: {
+        "USDC": {
+            "address": "0xF175520C52418dfE19C8098071a252da48Cd1C19",
+            "chainId": 84531,
+            "name": "USDCoin",
+            "img": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
         },
-        "cbETH": {
-            "address": "0x2Ae3F1Ec7F1F5012CFEab0185bfc7aa3cf0DEc22",
-            "chainId": 8453,
-            "name": "Coinbase Wrapped Staked ETH",
-            "img": "https://ethereum-optimism.github.io/data/cbETH/logo.svg"
+        "WETH": {
+            "address": "0x4200000000000000000000000000000000000006",
+            "chainId": 84531,
+            "name": "Wrapped Ether",
+            "img": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
         },
        
     } },
 
-    "Gnosis ": { id: 100, tokens: {
+    "Gnosis ": { id: 100, img: "https://icons.llamao.fi/icons/chains/rsz_xdai.jpg", tokens: {
         "USDC": {
             "address": "0xddafbb505ad214d7b80b1f830fccc89b60fb7a83",
             "chainId": 100,
@@ -52,7 +53,7 @@ export const Chains = {
 
     },
 
-    "Ethereum Mainnet ": { id: 1, tokens: {
+    "Ethereum Mainnet ": { id: 1, img: "https://icons.llamao.fi/icons/chains/rsz_ethereum.jpg", tokens: {
         "API3": {
             "address": "0x0b38210ea11411557c13457D4dA7dC6ea731B88a",
             "chainId": 1,
@@ -85,6 +86,13 @@ export const Chains = {
             "chainId": 1,
             "name": "Dai Stablecoin",
             "img": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
+    
+        },
+        "WETH": {
+            "address": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+            "chainId": 1,
+            "name": "Wrapped Ether",
+            "img": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
     
         }
     } }

@@ -3,6 +3,9 @@ import { useEffect, useState,useRef } from 'react'
 import { Center, HStack, VStack, Text, Button, Heading, Divider, Image } from '@chakra-ui/react'
 import { Card, CardHeader, CardBody, CardFooter } from '@chakra-ui/react'
 import { ChevronDownIcon, AddIcon } from '@chakra-ui/icons'
+import { Order } from '@sharedtypes/myTypes'
+import axios from 'axios';
+
 import {
   Menu,
   MenuButton,
@@ -69,6 +72,28 @@ export default function Home() {
 
   const [swapsData, setSwapsData] = useState<Swap>([])
 
+    // calls 1inch API
+   const fetchPrices = async (sendAmount: any) => {
+     
+       // Define the headers you want to include in the request
+       const headers = {
+        'Authorization': 'Bearer I7DR5uSnBavmXxZQlWx0wOfGsHIi1Xki', // Include any authentication token if required
+      };
+      let url = "https://cors-anywhere.herokuapp.com/https://api.1inch.dev/price/v1.1/1/" +  Chains[sendChain]["tokens"][sendToken].address + "," + Chains[receiveChain]["tokens"][receiveToken].address 
+      
+      try {
+         const response = await axios.get(url, {headers});
+         const prices = response.data;
+         const a = (Chains[receiveChain]["tokens"][receiveToken].address).toLowerCase()
+         const b = Chains[sendChain]["tokens"][sendToken].address.toLowerCase()
+         let factor = prices[b] / prices[a]
+        let y = factor * sendAmount *0.97
+         setReceiveAmount(y.toFixed(5))
+      } catch (error) {
+        console.error('Error fetching users:', error.message);
+      }
+   }
+
 
   // updates send token name
   const updateSendToken = (val: string) => {
@@ -80,16 +105,13 @@ export default function Home() {
   }
 
   const updateSendChain = (val: string) => {
+    setSendToken("Select Token")
     setSendChain(val)
   }
 
   const updateReceiveChain = (val: string) => {
+    setReceiveToken("Select Token")
     setReceiveChain(val)
-  }
-
-
-  const updateSwapData = (val: string) => {
-   
   }
 
   
@@ -97,11 +119,13 @@ export default function Home() {
   const updateSendAmount = (valueAsString: String, valueasNumber: GLfloat) => {
     if (valueAsString != "") {
       setSendAmount(valueasNumber)
-      if (receiveToken != "Select Token") {
+      if (receiveToken != "Select Token" && sendToken != "Select Token" && valueasNumber != 0.0) {
         // set the amount they will receive 
         // TODO: get the translation from an API call???
+        fetchPrices(valueasNumber)
 
-        setReceiveAmount(valueasNumber * 100)
+
+        // setReceiveAmount(valueasNumber * 100)
       }
 
     }
@@ -157,7 +181,7 @@ export default function Home() {
 
     console.log("swap")
 
-    setLoadingState(1);
+setLoadingState(1);
     try {
       const signature = await signTypedData({
         domain,
@@ -168,10 +192,10 @@ export default function Home() {
 
       await postCreateOrder(message,address,signature)
       console.log(signature)
-      setLoadingState(2);
+setLoadingState(2);
     } catch (err) {
       console.log(err)
-      setLoadingState(0);
+setLoadingState(0);
     }
 
 
@@ -299,11 +323,26 @@ export default function Home() {
 
                         <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
 
+                        <Flex>
+                              <Box p='2' >
+                              {sendChain != "Select Chain" ?
+                          
+                          <Image
+                            boxSize='1.5rem'
+                            borderRadius='full'
+                            src={Chains[sendChain]["img"]}
 
-                          <Text>
+                          /> : <></>
+                        }
+                              </Box>
+                              <Spacer />
+                              <Box p='2' >
+                              <Text>
                             {sendChain}
 
                           </Text>
+                              </Box>
+                            </Flex>
 
 
                         </MenuButton>
@@ -414,11 +453,30 @@ export default function Home() {
 
                         <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
 
+                        <Flex>
+                              <Box p='2' >
+                              {receiveChain != "Select Chain" ?
+                          
+                          <Image
+                            boxSize='1.5rem'
+                            borderRadius='full'
+                            src={Chains[receiveChain]["img"]}
 
-                          <Text>
+                          /> : <></>
+                        }
+                              </Box>
+                              <Spacer />
+                              <Box p='2' >
+                              <Text>
                             {receiveChain}
 
                           </Text>
+                          
+                              </Box>
+                            </Flex>
+                        
+
+                          
 
 
                         </MenuButton>
@@ -445,11 +503,19 @@ export default function Home() {
 
 
 
-                  <br></br> <br></br> <br></br>
-
-                  <Heading>
+                  <br></br> 
+                    <Flex>
+                      <Spacer/>
+                      <Box p='4'>
+                      <Heading>
                     {receiveAmount}
                   </Heading>
+                  {receiveChain}
+                      </Box>
+                    
+               
+
+                  </Flex>   
 
                 </CardBody>
               </Card>
@@ -465,7 +531,7 @@ export default function Home() {
               <Button outlineColor={"lightblue"} onClick={() => connect()}>Connect Wallet</Button>
             )}
           </Card>
-          <div className="flex justify-center items-center p-5">
+<div className="flex justify-center items-center p-5">
             {loadingState === 2 ? (
               <Image src='nouns_anim.gif' alt='Nouns Animation' width="160px" height="60px"/>
             ) : loadingState === 1 ? (
@@ -504,7 +570,7 @@ export default function Home() {
                   <CardBody>
                   <Heading>{singleSwap.swapAddress}</Heading>
                 <Divider></Divider>
-                 <Text fontWeight="light">Source:</Text> 
+                 <Text>Source:</Text> 
                   <Flex>
                     <Box p='4'>
                       ChainID: {singleSwap.sourceChainId}
