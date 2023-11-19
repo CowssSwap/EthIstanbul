@@ -131,7 +131,7 @@ export const Chains = {
             "name": "BTC (Sollet)",
             "img": "https://raw.githubusercontent.com/neonlabsorg/token-list/master/assets/sollet-wbtc-logo.svg"
         },
-
+//@ts-ignore
         "BTC": {
             "address": "0xcFFd84d468220c11be64dc9dF64eaFE02AF60e8A	",
             "chainId": 245022934,

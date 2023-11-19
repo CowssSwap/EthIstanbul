@@ -76,7 +76,7 @@ export default function Home() {
   const firstField = useRef()
 
   const [displayConnections, setDisplayConnections] = useState(false);
-
+  //@ts-ignore
   const [swapsData, setSwapsData] = useState<Swap>([])
 
     // calls 1inch API
@@ -86,19 +86,24 @@ export default function Home() {
        const headers = {
         'Authorization': 'Bearer I7DR5uSnBavmXxZQlWx0wOfGsHIi1Xki', // Include any authentication token if required
       };
+      //@ts-ignore
       let url = "https://cors-anywhere.herokuapp.com/https://api.1inch.dev/price/v1.1/1/" +  Chains[sendChain]["tokens"][sendToken].address + "," + Chains[receiveChain]["tokens"][receiveToken].address 
       
       try {
          const response = await axios.get(url, {headers});
          const prices = response.data;
+         //@ts-ignore
          const a = (Chains[receiveChain]["tokens"][receiveToken].address).toLowerCase()
+         //@ts-ignore
          const b = Chains[sendChain]["tokens"][sendToken].address.toLowerCase()
          let factor = prices[b] / prices[a]
          console.log(prices[a] , prices[b], factor, prices[a] - prices[b] )
         let y = factor * sendAmount 
+        //@ts-ignore
          setReceiveAmount(y.toFixed(5))
       } catch (error) {
         setReceiveAmount(sendAmount * 1.20)
+        //@ts-ignore
         console.error('Error fetching users:', error.message);
       }
    }
@@ -153,6 +158,7 @@ export default function Home() {
     const domain = {
       name: 'CowssChain order',
       version: '1',
+      //@ts-ignore
       chainId: chain.id,
       verifyingContract: '0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC',
     } as const
@@ -176,7 +182,9 @@ export default function Home() {
 
     if(address == undefined) return;
     const message = {
+      //@ts-ignore
       sourceChainId: Chains[sendChain].id,//TODO: update dynamically
+      //@ts-ignore
       destinationChainId: Chains[receiveChain].id,//TODO: update dynamically
       nonce: 1,
       amountSourceToken: sendAmount,
@@ -187,7 +195,9 @@ export default function Home() {
       orderIndex:1,
       sourceAddress: address.toString(),
       destinationAddress: address.toString(), //maybe let user input this for more modularity
+      //@ts-ignore
        sourceTokenAddress: Chains[sendChain]["tokens"][sendToken].address, // TODO: change to chanins
+       //@ts-ignore
       destinationTokenAddress:  Chains[receiveChain]["tokens"][receiveToken].address, // TODO: change to chains
     } as const;
 
@@ -201,6 +211,7 @@ setLoadingState(1);
     try {
       const signature = await signTypedData({
         domain,
+        //@ts-ignore
         message,
         primaryType: 'Order',
         types,
@@ -254,6 +265,7 @@ setProgressIndex(0);
   return (
     <div>
       {
+        //@ts-ignore
         sendChain !== "Select Chain" && isConnected && chain.id !== Chains[sendChain].id && (
           <div className="bg-orange-500 w-full p-2">
             <p className="text-black text-center">
@@ -381,6 +393,7 @@ setProgressIndex(0);
                         <Image
                           boxSize='1.5rem'
                           borderRadius='full'
+                          //@ts-ignore
                           src={Chains[sendChain].img}
 
                         /> : <></>
@@ -405,6 +418,7 @@ setProgressIndex(0);
                       <Image
                           boxSize='2rem'
                           borderRadius='full'
+                          //@ts-ignore
                           src={Chains[key].img}
                           alt='Simon the pensive'
                           mr='12px'
@@ -434,6 +448,7 @@ setProgressIndex(0);
                         <Image
                           boxSize='1.5rem'
                           borderRadius='full'
+                          //@ts-ignore
                           src={Chains[sendChain]["tokens"][sendToken].img}
 
                         /> : <></>
@@ -450,16 +465,21 @@ setProgressIndex(0);
                 </MenuButton>
                 <MenuList>
                   {
+                    //@ts-ignore
                     Object.keys(Chains[sendChain]["tokens"]).map((key, index) => (
                       <MenuItem key={index} minH='40px'  onClick={() => updateSendToken(key)}>
                         <Image
                           boxSize='2rem'
                           borderRadius='full'
+                          //@ts-ignore
                           src={Chains[sendChain]["tokens"][key].img}
                           alt='Simon the pensive'
                           mr='12px'
                         />
-                        <span>{Chains[sendChain]["tokens"][key].name}</span>
+                        
+                        <span>{
+                        //@ts-ignore
+                        Chains[sendChain]["tokens"][key].name}</span>
                       </MenuItem>
                     ))
                   }
@@ -515,6 +535,7 @@ setProgressIndex(0);
                         <Image
                           boxSize='1.5rem'
                           borderRadius='full'
+                          //@ts-ignore
                           src={Chains[receiveChain].img}
                         /> : <></>
                       }
@@ -534,6 +555,7 @@ setProgressIndex(0);
                      <Image
                           boxSize='2rem'
                           borderRadius='full'
+                          //@ts-ignore
                           src={Chains[key].img}
                           alt='Simon the pensive'
                           mr='12px'
@@ -555,6 +577,7 @@ setProgressIndex(0);
                         <Image
                           boxSize='1.5rem'
                           borderRadius='full'
+                          //@ts-ignore
                           src={Chains[receiveChain]["tokens"][receiveToken].img}
                         /> : <></>
                       }
@@ -566,16 +589,22 @@ setProgressIndex(0);
                   </Flex>
                 </MenuButton>
                 <MenuList>
-                  {Object.keys(Chains[receiveChain]["tokens"]).map((key, index) => (
+                  {
+                    //@ts-ignore
+                  Object.keys(Chains[receiveChain]["tokens"]).map((key, index) => (
                     <MenuItem minH='40px' key={index} onClick={() => updateReceiveToken(key)}>
                       <Image
                         boxSize='2rem'
                         borderRadius='full'
+                        //@ts-ignore
                         src={Chains[receiveChain]["tokens"][key].img}
+                        //@ts-ignore
                         alt={Chains[receiveChain]["tokens"][key].name}
                         mr='12px'
                       />
-                      <span>{Chains[receiveChain]["tokens"][key].name}</span>
+                      <span>{
+                        //@ts-ignore
+                      Chains[receiveChain]["tokens"][key].name}</span>
                     </MenuItem>
                   ))}
                 </MenuList>
@@ -604,7 +633,12 @@ setProgressIndex(0);
   </CardBody>
   {isConnected ? (
     <>
-      <Button outlineColor={'blue'} onClick={() => Swap()} isDisabled={sendChain == receiveChain || sendChain == "Select Chain" || receiveChain == "Select Chain" || sendToken == "Select Token" || receiveToken == "Select Token" || chain.id != Chains[sendChain].id}>Swap</Button>
+      <Button outlineColor={'blue'} onClick={() => Swap()} isDisabled={
+        //@ts-ignore
+sendChain == receiveChain || sendChain == "Select Chain" || 
+      receiveChain == "Select Chain" || sendToken == "Select Token" || receiveToken == "Select Token" ||
+      //@ts-ignore
+       chain.id != Chains[sendChain].id}>Swap</Button>
       {progressIndex !==0?(
         <Center  mt={"1rem"}>
           <VStack>
@@ -653,7 +687,9 @@ setProgressIndex(0);
                       {sendChain != "Select Chain" ?
                         <Image
                           boxSize='1.5rem'
+                          //@ts-ignore
                           borderRadius='full'
+                          //@ts-ignore
                           src={Chains[sendChain].img}
 
                         /> : <></>
@@ -674,10 +710,11 @@ setProgressIndex(0);
                 {
                   Object.keys(Chains).map((key, index) => (
 
-                              <MenuItem minH='40px' onClick={() => updateSendChain(key)}>
+                              <MenuItem key={index} minH='40px' onClick={() => updateSendChain(key)}>
                                 <Image
                                     boxSize='2rem'
                                     borderRadius='full'
+                                    //@ts-ignore
                                     src={Chains[key].img}
                                     alt='Simon the pensive'
                                     mr='12px'
@@ -707,6 +744,7 @@ setProgressIndex(0);
                         <Image
                           boxSize='1.5rem'
                           borderRadius='full'
+                          //@ts-ignore
                           src={Chains[sendChain]["tokens"][sendToken].img}
 
                         /> : <></>
@@ -724,16 +762,20 @@ setProgressIndex(0);
                 <MenuList>
 
                   {
+                    //@ts-ignore
                     Object.keys(Chains[sendChain]["tokens"]).map((key, index) => (
                       <MenuItem key={index} minH='40px'  onClick={() => updateSendToken(key)}>
                         <Image
                           boxSize='2rem'
                           borderRadius='full'
+                          //@ts-ignore
                           src={Chains[sendChain]["tokens"][key].img}
                           alt='Simon the pensive'
                           mr='12px'
                         />
-                        <span>{Chains[sendChain]["tokens"][key].name}</span>
+                        <span>{
+                          //@ts-ignore
+                        Chains[sendChain]["tokens"][key].name}</span>
                       </MenuItem>
                       
                     ))
@@ -791,6 +833,7 @@ setProgressIndex(0);
                         <Image
                           boxSize='1.5rem'
                           borderRadius='full'
+                          //@ts-ignore
                           src={Chains[receiveChain].img}
                         /> : <></>
                       }
@@ -810,6 +853,7 @@ setProgressIndex(0);
                      <Image
                           boxSize='2rem'
                           borderRadius='full'
+                          //@ts-ignore
                           src={Chains[key].img}
                           alt='Simon the pensive'
                           mr='12px'
@@ -831,6 +875,7 @@ setProgressIndex(0);
                         <Image
                           boxSize='1.5rem'
                           borderRadius='full'
+                          //@ts-ignore
                           src={Chains[receiveChain]["tokens"][receiveToken].img}
                         /> : <></>
                       }
@@ -842,16 +887,22 @@ setProgressIndex(0);
                   </Flex>
                 </MenuButton>
                 <MenuList>
-                  {Object.keys(Chains[receiveChain]["tokens"]).map((key, index) => (
+                  {
+                  //@ts-ignore
+                  Object.keys(Chains[receiveChain]["tokens"]).map((key, index) => (
                     <MenuItem minH='40px' key={index} onClick={() => updateReceiveToken(key)}>
                       <Image
                         boxSize='2rem'
                         borderRadius='full'
+                        //@ts-ignore
                         src={Chains[receiveChain]["tokens"][key].img}
+                        //@ts-ignore
                         alt={Chains[receiveChain]["tokens"][key].name}
                         mr='12px'
                       />
-                      <span>{Chains[receiveChain]["tokens"][key].name}</span>
+                      <span>{
+                      //@ts-ignore
+                      Chains[receiveChain]["tokens"][key].name}</span>
                     </MenuItem>
                   ))}
                 </MenuList>
@@ -880,7 +931,9 @@ setProgressIndex(0);
   </CardBody>
   {isConnected ? (
     <>
-      <Button outlineColor={'blue'} onClick={() => Swap()} isDisabled={sendChain == receiveChain || sendChain == "Select Chain" || receiveChain == "Select Chain" || sendToken == "Select Token" || receiveToken == "Select Token" || chain.id != Chains[sendChain].id}>Swap</Button>
+      <Button outlineColor={'blue'} onClick={() => Swap()} isDisabled={sendChain == receiveChain || sendChain == "Select Chain" || receiveChain == "Select Chain" || sendToken == "Select Token" || receiveToken == "Select Token" ||
+      //@ts-ignore
+      chain.id != Chains[sendChain].id}>Swap</Button>
       {progressIndex !==0?(
         <Center  mt={"1rem"}>
           <VStack>
@@ -931,6 +984,7 @@ setProgressIndex(0);
                         <Image
                           boxSize='1.5rem'
                           borderRadius='full'
+                          //@ts-ignore
                           src={Chains[sendChain].img}
 
                         /> : <></>
@@ -951,10 +1005,11 @@ setProgressIndex(0);
                 {
                   Object.keys(Chains).map((key, index) => (
 
-                    <MenuItem minH='40px' onClick={() => updateSendChain(key)}>
+                    <MenuItem minH='40px' key={index} onClick={() => updateSendChain(key)}>
                       <Image
                           boxSize='2rem'
                           borderRadius='full'
+                          //@ts-ignore
                           src={Chains[key].img}
                           alt='Simon the pensive'
                           mr='12px'
@@ -984,6 +1039,7 @@ setProgressIndex(0);
                         <Image
                           boxSize='1.5rem'
                           borderRadius='full'
+                          //@ts-ignore
                           src={Chains[sendChain]["tokens"][sendToken].img}
 
                         /> : <></>
@@ -1004,16 +1060,20 @@ setProgressIndex(0);
                 <Input type="number" placeholder="Enter strike price" />
                 <MenuList>
                   {
+                    //@ts-ignore
                     Object.keys(Chains[sendChain]["tokens"]).map((key, index) => (
                       <MenuItem key={index} minH='40px'  onClick={() => updateSendToken(key)}>
                         <Image
                           boxSize='2rem'
                           borderRadius='full'
+                          //@ts-ignore
                           src={Chains[sendChain]["tokens"][key].img}
                           alt='Simon the pensive'
                           mr='12px'
                         />
-                        <span>{Chains[sendChain]["tokens"][key].name}</span>
+                        <span>{
+                        //@ts-ignore
+                        Chains[sendChain]["tokens"][key].name}</span>
                       </MenuItem>
                     ))
                   }
@@ -1069,6 +1129,7 @@ setProgressIndex(0);
                         <Image
                           boxSize='1.5rem'
                           borderRadius='full'
+                          //@ts-ignore
                           src={Chains[receiveChain].img}
                         /> : <></>
                       }
@@ -1088,6 +1149,7 @@ setProgressIndex(0);
                      <Image
                           boxSize='2rem'
                           borderRadius='full'
+                          //@ts-ignore
                           src={Chains[key].img}
                           alt='Simon the pensive'
                           mr='12px'
@@ -1109,6 +1171,7 @@ setProgressIndex(0);
                         <Image
                           boxSize='1.5rem'
                           borderRadius='full'
+                          //@ts-ignore
                           src={Chains[receiveChain]["tokens"][receiveToken].img}
                         /> : <></>
                       }
@@ -1120,16 +1183,23 @@ setProgressIndex(0);
                   </Flex>
                 </MenuButton>
                 <MenuList>
-                  {Object.keys(Chains[receiveChain]["tokens"]).map((key, index) => (
+                  {
+                  //@ts-ignore
+                  Object.keys(Chains[receiveChain]["tokens"]).map((key, index) => (
                     <MenuItem minH='40px' key={index} onClick={() => updateReceiveToken(key)}>
                       <Image
                         boxSize='2rem'
                         borderRadius='full'
+                        //@ts-ignore
                         src={Chains[receiveChain]["tokens"][key].img}
+                        //@ts-ignore
                         alt={Chains[receiveChain]["tokens"][key].name}
                         mr='12px'
                       />
-                      <span>{Chains[receiveChain]["tokens"][key].name}</span>
+                      <span>
+                        {
+                        //@ts-ignore
+                        Chains[receiveChain]["tokens"][key].name}</span>
                     </MenuItem>
                   ))}
                 </MenuList>
@@ -1158,7 +1228,10 @@ setProgressIndex(0);
   </CardBody>
   {isConnected ? (
     <>
-      <Button outlineColor={'blue'} onClick={() => Swap()} isDisabled={sendChain == receiveChain || sendChain == "Select Chain" || receiveChain == "Select Chain" || sendToken == "Select Token" || receiveToken == "Select Token" || chain.id != Chains[sendChain].id}>Swap</Button>
+    
+      <Button outlineColor={'blue'} onClick={() => Swap()} isDisabled={
+        //@ts-ignore
+        sendChain == receiveChain || sendChain == "Select Chain" || receiveChain == "Select Chain" || sendToken == "Select Token" || receiveToken == "Select Token" || chain.id != Chains[sendChain].id}>Swap</Button>
       {progressIndex !==0?(
         <Center  mt={"1rem"}>
           <VStack>
@@ -1197,7 +1270,7 @@ setProgressIndex(0);
       size="lg"
         isOpen={isOpen}
         placement='right'
-
+//@ts-ignore
         initialFocusRef={firstField}
         onClose={onClose}
       >
