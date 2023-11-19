@@ -3,12 +3,9 @@ import { useEffect, useState,useRef } from 'react'
 import { Center, HStack, VStack, Text, Button, Heading, Divider, Image } from '@chakra-ui/react'
 import { Card, CardHeader, CardBody, CardFooter } from '@chakra-ui/react'
 import { ChevronDownIcon, AddIcon } from '@chakra-ui/icons'
-<<<<<<< HEAD
 import { Order } from '@sharedtypes/myTypes'
 import axios from 'axios';
 
-=======
->>>>>>> 441c2362862691cd3a1cd5f1b1ab2ebf417273db
 import {
   Menu,
   MenuButton,
