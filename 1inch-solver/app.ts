@@ -7,7 +7,7 @@ import {AuctionSalt, AuctionSuffix, FusionOrder, PrivateKeyProviderConnector} fr
 import {FusionSDK, NetworkEnum, QuoteParams} from '@1inch/fusion-sdk'
 import Web3 from "web3"
 dotenv.config();
-const rpc = {5:"https://ethereum-goerli.publicnode.com",10200:"https://1rpc.io/gnosis	",421613:"https://endpoints.omniatech.io/v1/arbitrum/goerli/public",420:"https://endpoints.omniatech.io/v1/op/goerli/public",280:"https://testnet.era.zksync.dev",84531:"https://endpoints.omniatech.io/v1/base/goerli/public	",80001:"https://endpoints.omniatech.io/v1/matic/mumbai/public",4002:"https://fantom.api.onfinality.io/public",1442:"https://rpc.public.zkevm-test.net",59140:"https://rpc.goerli.linea.build",44787:"https://alfajores-forno.celo-testnet.org"}
+const rpc = {5:"https://ethereum-goerli.publicnode.com",10200:"https://1rpc.io/gnosis	",421613:"https://endpoints.omniatech.io/v1/arbitrum/goerli/public",420:"https://endpoints.omniatech.io/v1/op/goerli/public",280:"https://testnet.era.zksync.dev",84531:"https://endpoints.omniatech.io/v1/base/goerli/public	",80001:"https://endpoints.omniatech.io/v1/matic/mumbai/public",4002:"https://fantom.api.onfinality.io/public",1442:"https://rpc.public.zkevm-test.net",59140:"https://rpc.goerli.linea.build",44787:"https://alfajores-forno.celo-testnet.org",245022940:"https://testnet.neonevm.org",534351:"https://sepolia-rpc.scroll.io"}
 const tokens = {5:"0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6",10200:"0x02abbdbaaa7b1bb64b5c878f7ac17f8dda169532"}
 const decimals = {"0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6":18,"0x02abbdbaaa7b1bb64b5c878f7ac17f8dda169532":18}
 async function putOrder(dborder:DbOrder) {//arbitrum optimisim zksync gnosis ,base, polygon zkevm fantom celo,linea

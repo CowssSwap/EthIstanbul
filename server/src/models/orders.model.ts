@@ -1,7 +1,7 @@
 import { AccountType, OrderState } from "@sharedtypes/enums"
 import mongoose from "mongoose"
 const Orders = new mongoose.Schema({
-    filecoin_hash: {
+    sign: {
         type: String,
         required: true,
         unique: true,

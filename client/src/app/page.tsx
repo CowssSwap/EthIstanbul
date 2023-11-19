@@ -4,6 +4,8 @@ import { Center, HStack, VStack, Text, Button, Heading, Divider, Image } from '@
 import { Card, CardHeader, CardBody, CardFooter } from '@chakra-ui/react'
 import { ChevronDownIcon, AddIcon } from '@chakra-ui/icons'
 import { Order } from '@sharedtypes/myTypes'
+import axios from 'axios';
+
 import {
   Menu,
   MenuButton,
@@ -45,8 +47,7 @@ import { useAccount, useConnect, useDisconnect, useNetwork, useWalletClient, use
 import { signTypedData, getNetwork } from "@wagmi/core"
 import { InjectedConnector } from 'wagmi/connectors/injected'
 import { Chains, Tokens } from './tokens'
-
-
+import postCreateOrder from '@/utils/postCreateOrder'
 
 export default function Home() {
   const { chain, chains } = useNetwork()
@@ -70,8 +71,31 @@ export default function Home() {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const firstField = useRef()
 
-  const [swapsData, setSwapsData] = useState([])
   const [displayConnections, setDisplayConnections] = useState(false);
+
+  const [swapsData, setSwapsData] = useState<Swap>([])
+
+    // calls 1inch API
+   const fetchPrices = async (sendAmount: any) => {
+     
+       // Define the headers you want to include in the request
+       const headers = {
+        'Authorization': 'Bearer I7DR5uSnBavmXxZQlWx0wOfGsHIi1Xki', // Include any authentication token if required
+      };
+      let url = "https://cors-anywhere.herokuapp.com/https://api.1inch.dev/price/v1.1/1/" +  Chains[sendChain]["tokens"][sendToken].address + "," + Chains[receiveChain]["tokens"][receiveToken].address 
+      
+      try {
+         const response = await axios.get(url, {headers});
+         const prices = response.data;
+         const a = (Chains[receiveChain]["tokens"][receiveToken].address).toLowerCase()
+         const b = Chains[sendChain]["tokens"][sendToken].address.toLowerCase()
+         let factor = prices[b] / prices[a]
+        let y = factor * sendAmount *0.97
+         setReceiveAmount(y.toFixed(5))
+      } catch (error) {
+        console.error('Error fetching users:', error.message);
+      }
+   }
 
 
   // updates send token name
@@ -84,29 +108,27 @@ export default function Home() {
   }
 
   const updateSendChain = (val: string) => {
+    setSendToken("Select Token")
     setSendChain(val)
 
   }
 
   const updateReceiveChain = (val: string) => {
+    setReceiveToken("Select Token")
     setReceiveChain(val)
   }
-
-
-  const updateSwapData = (val: string) => {
-
-  }
-
 
 
   const updateSendAmount = (valueAsString: String, valueasNumber: GLfloat) => {
     if (valueAsString != "") {
       setSendAmount(valueasNumber)
-      if (receiveToken != "Select Token") {
+      if (receiveToken != "Select Token" && sendToken != "Select Token" && valueasNumber != 0.0) {
         // set the amount they will receive 
         // TODO: get the translation from an API call???
+        fetchPrices(valueasNumber)
 
-        setReceiveAmount(valueasNumber * 100)
+
+        // setReceiveAmount(valueasNumber * 100)
       }
 
     }
@@ -137,7 +159,7 @@ export default function Home() {
         { name: "amountSourceToken", type: "uint256" },
         { name: "minDestinationTokenAmount", type: "uint256" },
         { name: "expirationTimestamp", type: "uint256" },
-        { name: "stakeOrder", type: "uint256" },
+        { name: "stakeAmount", type: "uint256" },
         { name: "sourceAddress", type: "address" },
         { name: "destinationAddress", type: "address" },
         { name: "sourceTokenAddress", type: "address" },
@@ -145,8 +167,8 @@ export default function Home() {
       ]
     } as const;
 
-    console.log(sendChain)
 
+    if(address == undefined) return;
     const message = {
       sourceChainId: Chains[sendChain].id,//TODO: update dynamically
       destinationChainId: Chains[receiveChain].id,//TODO: update dynamically
@@ -154,16 +176,18 @@ export default function Home() {
       amountSourceToken: sendAmount,
       minDestinationTokenAmount: receiveAmount,
       expirationTimestamp: expirationTimestamp,
-      stakeOrder: 1,
-      sourceAddress: address,
-      destinationAddress: address, //maybe let user input this for more modularity
-      sourceTokenAddress: Tokens[sendToken].address, // TODO: update dynamically
-      destinationTokenAddress: Tokens[receiveToken].address, // TODO: update dynamically
+
+      stakeAmount: 1,
+      orderIndex:1,
+      sourceAddress: address.toString(),
+      destinationAddress: address.toString(), //maybe let user input this for more modularity
+       sourceTokenAddress: Tokens[sendToken].address, // TODO: change to chanins
+      destinationTokenAddress: Tokens[receiveToken].address, // TODO: change to chains
     } as const;
 
     console.log("swap")
 
-    setLoadingState(1);
+setLoadingState(1);
     try {
       const signature = await signTypedData({
         domain,
@@ -171,12 +195,16 @@ export default function Home() {
         primaryType: 'Order',
         types,
       })
+
+      await postCreateOrder(message,address,signature)
       console.log(signature)
-      setLoadingState(2);
+setLoadingState(2);
     } catch (err) {
       console.log(err)
-      setLoadingState(0);
+setLoadingState(0);
     }
+
+
 
 
     let tempSwapsData = swapsData
@@ -262,11 +290,13 @@ export default function Home() {
           )}
 
         </Box>
+        {isConnected ? (
         <Box p='4'>
           <Button outlineColor={"black"} onClick={onOpen}>
             Running Swaps
           </Button>
         </Box>
+        ):<></>}
       </Flex>
 
       <Center mt={"5rem"}>
@@ -343,7 +373,7 @@ export default function Home() {
                           <MenuList>
                             {
                               Object.keys(Chains[sendChain]["tokens"]).map((key, index) => (
-                                <MenuItem minH='40px' onClick={() => updateSendToken(key)}>
+                                <MenuItem key={index} minH='40px'  onClick={() => updateSendToken(key)}>
                                   <Image
                                     boxSize='2rem'
                                     borderRadius='full'
@@ -361,7 +391,6 @@ export default function Home() {
 
 
                     </Box>
-
 
                   </Flex>
 
@@ -451,7 +480,7 @@ export default function Home() {
                       </Box>
                     }
                   </Flex>
-                  {/* ... Rest of the card content */}
+
                 </CardBody>
               </Card>
 
@@ -467,7 +496,7 @@ export default function Home() {
               <Button outlineColor={"lightblue"} onClick={() => setDisplayConnections(true)}>Connect Wallet</Button>
             )}
           </Card>
-          <div className="flex justify-center items-center p-5">
+<div className="flex justify-center items-center p-5">
             {loadingState === 2 ? (
               <Image src='nouns_anim.gif' alt='Nouns Animation' width="160px" height="60px" />
             ) : loadingState === 1 ? (
@@ -481,10 +510,12 @@ export default function Home() {
 
 
 
-
+      
       <Drawer
+      size="lg"
         isOpen={isOpen}
         placement='right'
+
         initialFocusRef={firstField}
         onClose={onClose}
       >
@@ -492,18 +523,50 @@ export default function Home() {
         <DrawerContent>
           <DrawerCloseButton />
           <DrawerHeader borderBottomWidth='1px'>
-            Create a new account
+            Your Swaps
           </DrawerHeader>
 
           <DrawerBody>
+          
 
-            { }
+            {swapsData.map((singleSwap:any) => (
+              <>
+                <Card>
+                  <CardBody>
+                  <Heading>{singleSwap.swapAddress}</Heading>
+                <Divider></Divider>
+                 <Text>Source:</Text> 
+                  <Flex>
+                    <Box p='4'>
+                      ChainID: {singleSwap.sourceChainId}
+                    </Box>
+                    <Box  p='4'>
+                      TokenAddress: {singleSwap.sourceTokenAddress}
+                    </Box>
+                  </Flex>
 
+                  <Text>Destination:</Text> 
+                  <Flex>
+                    <Box p='4'>
+                      ChainID: {singleSwap.destinationChainId}
+                    </Box>
+                    <Box  p='4'>
+                      TokenAddress: {singleSwap.destinationTokenAddress}
+                    </Box>
+                  </Flex>
+
+
+                  </CardBody>
+               
+              </Card>
+               
+              </>
+
+            ))}
+          
           </DrawerBody>
         </DrawerContent>
       </Drawer>
-
-
     </div>
   )
 }
