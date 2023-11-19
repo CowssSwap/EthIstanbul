@@ -97,6 +97,7 @@ export default function Home() {
         let y = factor * sendAmount 
          setReceiveAmount(y.toFixed(5))
       } catch (error) {
+        setReceiveAmount(sendAmount * 1.20)
         console.error('Error fetching users:', error.message);
       }
    }
@@ -361,10 +362,6 @@ setLoadingState(0);
                           }
                         </MenuList>
                       </Menu>
-
-
-
-
                     </Box>
 
                     <Spacer />
