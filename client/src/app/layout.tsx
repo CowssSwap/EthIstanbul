@@ -20,7 +20,7 @@ export default function RootLayout({
     <html lang="en">
       <WagmiProvider>
         <UIProvider>
-      <body className={inter.className}>{children}</body>
+      <body  className={inter.className}>{children}</body>
       </UIProvider>
       </WagmiProvider>
       

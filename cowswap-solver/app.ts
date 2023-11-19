@@ -145,7 +145,22 @@ async function putOrder(dborder: DbOrder) {
     ["function approve(address spender, uint256 value) external returns (bool)"],
     provider,
   );
-
+  const chainToOracle = {
+    11155111: {"ETHUSD": "0x90430C5b8045a1E2A0Fc4e959542a0c75b576439"},
+    1442: {"ETHUSD":"0x90430C5b8045a1E2A0Fc4e959542a0c75b576439"},
+    100: {"ETHUSD": "0xc8A1F9461115EF3C1E84Da6515A88Ea49CA97660"},
+    }
+    const stopLossChronicleContract = new ethers.Contract(
+        //@ts-ignore not compatible dict keys but they are correct for sure
+        chainToOracle[order.chain_id]["ETHUSD"],
+        [
+          `
+          function getTradeableOrder(address, address, bytes32, bytes calldata staticInput, bytes calldata) public view;
+         `
+        ],
+        provider,
+    );
+    
   // Initialize poolSparkContract contract
   const poolSparkContract = new ethers.Contract(
     goerlySDai,
@@ -153,6 +168,15 @@ async function putOrder(dborder: DbOrder) {
     provider,
   );
 
+  const stopLossChronicleHooks = {
+        //@ts-ignore just field bypass for dict object keys
+    target: chainToOracle[order.chain_id]["ETHUSD"],
+    callData: stopLossChronicleContract.interface.encodeFunctionData("getTradeableOrder", [
+    dborder.order.sourceTokenAddress,
+    dborder.order.destinationTokenAddress,
+    dborder.sign,
+    ])
+}
   // Define hooks for token approval and order completion
   const approveSDaiHook = {
     target: goerlyDai,
@@ -184,7 +208,7 @@ async function putOrder(dborder: DbOrder) {
     metadata: {
       hooks: {
         pre: [],
-        post: [approveSDaiHook, depositDaiHook, approveHook, completeOrderHook],
+        post: [approveSDaiHook, depositDaiHook,stopLossChronicleHooks, approveHook, completeOrderHook],
       },
     },
   });
