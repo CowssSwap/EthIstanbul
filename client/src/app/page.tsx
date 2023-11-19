@@ -481,6 +481,17 @@ setLoadingState(0);
                     }
                   </Flex>
 
+
+                      <Flex>
+                        <Spacer/>
+                        <Box p = "4">
+                          <Heading>
+                            {receiveAmount}
+                          </Heading>
+                          {receiveChain}
+
+                        </Box>
+                      </Flex>
                 </CardBody>
               </Card>
 
