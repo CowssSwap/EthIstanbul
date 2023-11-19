@@ -95,23 +95,26 @@ export const Chains = {
             "img": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
     
         }
-    } }
+    } },
+
+    "Starknet ": { id: 100, img: "https://s2.coinmarketcap.com/static/img/coins/200x200/22691.png", tokens: {
+        "USDC": {
+            "address": "0xddafbb505ad214d7b80b1f830fccc89b60fb7a83",
+            "chainId": 100,
+            "name": "USDCoin",
+            "img": "https://s2.coinmarketcap.com/static/img/coins/200x200/22691.png"
+        },
+        "LINK": {
+            "address": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+            "chainId": 1,
+            "name": "ChainLink",
+            "img": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
+    
+        }
+    } 
 
 
-}
-
-export const Tokens = {
-    "USDC": {
-        "address": "0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85",
-        "chainId": 10,
-        "name": "USDCoin",
-        "img": "https://ethereum-optimism.github.io/data/USDC/logo.png"
     },
-    "WETH": {
-        "address": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
-        "chainId": 1,
-        "name": "Wrapped Ether",
-        "img": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
 
-    }
+
 }

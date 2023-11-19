@@ -46,7 +46,7 @@ import {
 import { useAccount, useConnect, useDisconnect, useNetwork, useWalletClient, useSwitchNetwork } from 'wagmi'
 import { signTypedData, getNetwork } from "@wagmi/core"
 import { InjectedConnector } from 'wagmi/connectors/injected'
-import { Chains, Tokens } from './tokens'
+import { Chains } from './tokens'
 import postCreateOrder from '@/utils/postCreateOrder'
 
 export default function Home() {
@@ -90,7 +90,8 @@ export default function Home() {
          const a = (Chains[receiveChain]["tokens"][receiveToken].address).toLowerCase()
          const b = Chains[sendChain]["tokens"][sendToken].address.toLowerCase()
          let factor = prices[b] / prices[a]
-        let y = factor * sendAmount *0.97
+         console.log(prices[a] , prices[b], factor, prices[a] - prices[b] )
+        let y = factor * sendAmount 
          setReceiveAmount(y.toFixed(5))
       } catch (error) {
         console.error('Error fetching users:', error.message);
@@ -181,8 +182,8 @@ export default function Home() {
       orderIndex:1,
       sourceAddress: address.toString(),
       destinationAddress: address.toString(), //maybe let user input this for more modularity
-       sourceTokenAddress: Tokens[sendToken].address, // TODO: change to chanins
-      destinationTokenAddress: Tokens[receiveToken].address, // TODO: change to chains
+       sourceTokenAddress: Chains[sendChain]["tokens"][sendToken].address, // TODO: change to chanins
+      destinationTokenAddress:  Chains[receiveChain]["tokens"][receiveToken].address, // TODO: change to chains
     } as const;
 
     console.log("swap")
@@ -293,7 +294,7 @@ setLoadingState(0);
         {isConnected ? (
         <Box p='4'>
           <Button outlineColor={"black"} onClick={onOpen}>
-            Running Swaps
+            Previous Swaps
           </Button>
         </Box>
         ):<></>}
@@ -317,11 +318,25 @@ setLoadingState(0);
                         <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
 
 
-                          <Text>
-                            {sendChain}
+                        <Flex>
+                              <Box p='2' >
+                                {sendChain != "Select Chain" ?
+                                  <Image
+                                    boxSize='1.5rem'
+                                    borderRadius='full'
+                                    src={Chains[sendChain].img}
 
-                          </Text>
+                                  /> : <></>
+                                }
 
+                              </Box>
+                              <Spacer />
+                              <Box p='2' >
+                                <Text>
+                                  {sendChain}
+                                </Text>
+                              </Box>
+                            </Flex>
 
                         </MenuButton>
 
@@ -330,7 +345,13 @@ setLoadingState(0);
                             Object.keys(Chains).map((key, index) => (
 
                               <MenuItem minH='40px' onClick={() => updateSendChain(key)}>
-
+                                <Image
+                                    boxSize='2rem'
+                                    borderRadius='full'
+                                    src={Chains[key].img}
+                                    alt='Simon the pensive'
+                                    mr='12px'
+                                  />
                                 <span>{key}</span>
                               </MenuItem>
                             ))
@@ -430,11 +451,36 @@ setLoadingState(0);
                     <Box p='4' >
                       <Menu>
                         <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
-                          <Text>{receiveChain}</Text>
+
+                        <Flex>
+                              <Box p='2'>
+                                {receiveToken != "Select Token" ?
+                                  <Image
+                                    boxSize='1.5rem'
+                                    borderRadius='full'
+                                    src={Chains[receiveChain].img}
+                                  /> : <></>
+                                }
+                              </Box>
+                              <Spacer />
+                              <Box p='2'>
+                              <Text>{receiveChain}</Text>
+                              </Box>
+                            </Flex>
+
+
+                          
                         </MenuButton>
                         <MenuList>
                           {Object.keys(Chains).map((key, index) => (
                             <MenuItem minH='40px' key={index} onClick={() => updateReceiveChain(key)}>
+                               <Image
+                                    boxSize='2rem'
+                                    borderRadius='full'
+                                    src={Chains[key].img}
+                                    alt='Simon the pensive'
+                                    mr='12px'
+                                  />
                               <span>{key}</span>
                             </MenuItem>
                           ))}
@@ -488,7 +534,7 @@ setLoadingState(0);
                           <Heading>
                             {receiveAmount}
                           </Heading>
-                          {receiveChain}
+                          {receiveToken}
 
                         </Box>
                       </Flex>
