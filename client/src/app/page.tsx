@@ -3,9 +3,12 @@ import { useEffect, useState,useRef } from 'react'
 import { Center, HStack, VStack, Text, Button, Heading, Divider, Image } from '@chakra-ui/react'
 import { Card, CardHeader, CardBody, CardFooter } from '@chakra-ui/react'
 import { ChevronDownIcon, AddIcon } from '@chakra-ui/icons'
+<<<<<<< HEAD
 import { Order } from '@sharedtypes/myTypes'
 import axios from 'axios';
 
+=======
+>>>>>>> 441c2362862691cd3a1cd5f1b1ab2ebf417273db
 import {
   Menu,
   MenuButton,
@@ -47,6 +50,7 @@ import { useAccount, useConnect, useDisconnect, useWalletClient } from 'wagmi'
 import { signTypedData } from "@wagmi/core"
 import { InjectedConnector } from 'wagmi/connectors/injected'
 import { Chains } from './tokens'
+import postCreateOrder from '@/utils/postCreateOrder'
 
 export default function Home() {
   const { address, isConnected } = useAccount()
@@ -162,7 +166,7 @@ export default function Home() {
         { name: "destinationTokenAddress", type: "address" }
       ]
     } as const;
-
+    if(address == undefined) return;
     const message = {
       sourceChainId: 80001,//TODO: update dynamically
       destinationChainId: 1,//TODO: update dynamically
@@ -171,8 +175,8 @@ export default function Home() {
       minDestinationTokenAmount: receiveAmount,
       expirationTimestamp: expirationTimestamp,
       stakeOrder: 1,
-      sourceAddress: address,
-      destinationAddress: address, //maybe let user input this for more modularity
+      sourceAddress: address.toString(),
+      destinationAddress: address.toString(), //maybe let user input this for more modularity
       sourceTokenAddress: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",//TODO: update dynamically
       destinationTokenAddress: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",//TODO: update dynamically
     } as const;
@@ -187,6 +191,7 @@ setLoadingState(1);
         primaryType: 'Order',
         types,
       })
+      await postCreateOrder(message,address,signature)
       console.log(signature)
 setLoadingState(2);
     } catch (err) {
@@ -293,7 +298,7 @@ setLoadingState(0);
                           <MenuList>
                             {
                               Object.keys(Chains[sendChain]["tokens"]).map((key, index) => (
-                                <MenuItem minH='40px' onClick={() => updateSendToken(key)}>
+                                <MenuItem key={index} minH='40px'  onClick={() => updateSendToken(key)}>
                                   <Image
                                     boxSize='2rem'
                                     borderRadius='full'
@@ -546,6 +551,7 @@ setLoadingState(0);
       size="lg"
         isOpen={isOpen}
         placement='right'
+
         initialFocusRef={firstField}
         onClose={onClose}
       >
@@ -559,7 +565,7 @@ setLoadingState(0);
           <DrawerBody>
           
 
-            {swapsData.map(singleSwap => (
+            {swapsData.map((singleSwap:any) => (
               <>
                 <Card>
                   <CardBody>

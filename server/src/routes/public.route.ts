@@ -5,7 +5,7 @@ const router = Router();
 
 
 router.get("/",publicController.getPublicDemo)
-router.post("/store",publicController.getPublicDemo)
+router.post("/store",publicController.postStoreOrderInfo)
 router.get("/history/:sourceAdress",publicController.getHistory)
 
 
